@@ -96,7 +96,7 @@ template<typename... Args>
 inline void ctVector<T>::emplace_back_array(const int64_t count, Args&&... args)
 {
   grow_reserve(m_size + count);
-  ctConstructArray<T, Args...>(m_pData + m_size, count, std::forward<Args>(args)...);
+  ctConstructArray(m_pData + m_size, count, std::forward<Args>(args)...);
   m_size += count;
 }
 
@@ -124,6 +124,17 @@ inline void ctVector<T>::resize(const int64_t size, const T &initial)
   bool growSucceeded = try_grow(size);
   ctAssert(growSucceeded, "Could not resize, try_grow failed!");
   bool resizeSucceeded = try_resize(size, initial);
+  ctAssert(resizeSucceeded, "Could not resize ctVector");
+}
+
+template<typename T>
+inline void ctVector<T>::resize(const int64_t size)
+{
+  if (try_resize(size))
+    return;
+  bool growSucceeded = try_grow(size);
+  ctAssert(growSucceeded, "Could not resize, try_grow failed!");
+  bool resizeSucceeded = try_resize(size);
   ctAssert(resizeSucceeded, "Could not resize ctVector");
 }
 
@@ -317,6 +328,19 @@ inline bool ctVector<T>::try_resize(const int64_t size, const T &initial)
     return false;
   if (m_size < size)
     emplace_back_array(size - m_size, initial); // emplace will call the default constructor of the new elements
+  else if (m_size > size)
+    shrink_by(m_size - size);
+  m_size = size;
+  return true;
+}
+
+template<typename T>
+inline bool ctVector<T>::try_resize(const int64_t size)
+{
+  if (m_capacity < size)
+    return false;
+  if (m_size < size)
+    emplace_back_array(size - m_size); // emplace will call the default constructor of the new elements
   else if (m_size > size)
     shrink_by(m_size - size);
   m_size = size;

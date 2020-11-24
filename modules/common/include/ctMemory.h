@@ -40,7 +40,6 @@
 // Will Construct/Destruct object of they are non primitive types
 template<typename T, typename... Args> void ctConstruct(T *pVal, Args&&... args);
 template<typename T, typename... Args> void ctConstructArray(T *pVal, const int64_t count, Args&&... args);
-template<typename T> void ctConstructArray(T *pVal, const int64_t count);
 
 template<typename T> typename std::enable_if<std::is_destructible<T>::value>::type ctDestruct(T *pVal);
 template<typename T> typename std::enable_if<!std::is_destructible<T>::value>::type ctDestruct(T *pVal) { ctUnused(pVal); }
@@ -50,35 +49,40 @@ template<typename T> typename std::enable_if<!std::is_destructible<T>::value>::t
 //*************************
 // Function Implementations
 
-template<typename T> typename std::enable_if<std::is_destructible<T>::value>::type ctDestructArray(T *pVal, const int64_t count)
+template<typename T> typename std::enable_if<std::is_destructible<T>::value>::type ctDestructArray(T *pVal, int64_t count)
+{
+  if (!std::is_trivially_destructible<T>::value)
+    while (count-- > 0)
+      ctDestruct(pVal++);
+}
+
+template<typename T, typename... Args> void ctConstructArray(T *pVal, int64_t count, Args&&... args)
+{
+  if (std::is_trivially_constructible<T>::value)
+  {
+    if (count > 1)
+      new (pVal) T[count];
+    else
+      ctConstruct(pVal, std::forward<Args>(args)...);
+  }
+  else
+  {
+    T value(std::forward<Args>(args)...);
+    while (count-- > 0)
+      memcpy(pVal, &value, count * sizeof(T));
+  }
+}
+
+template<typename T> inline void ctConstructArray(T *pVal, int64_t count)
 {
   if (std::is_integral<T>::value)
     return;
-  for (int64_t i = 0; i < count; ++i)
-    ctDestruct(&pVal[i]);
+  while (count-- > 0)
+    ctConstruct(pVal++);
 }
 
-template<typename T, typename... Args> void ctConstructArray(T *pVal, const int64_t count, Args&&... args)
-{
-  for (int64_t i = 0; i < count; ++i)
-    ctConstruct<T, Args...>(pVal + i, std::forward<Args>(args)...);
-}
+template<typename T> inline typename std::enable_if<std::is_destructible<T>::value>::type ctDestruct(T *pVal) { pVal->~T(); }
 
-template<typename T> inline void ctConstructArray(T *pVal, const int64_t count)
-{
-  if (std::is_integral<T>::value)
-    return;
-  for (int64_t i = 0; i < count; ++i)
-    ctConstruct(pVal + i);
-}
-
-template<typename T> inline typename std::enable_if<std::is_destructible<T>::value>::type ctDestruct(T *pVal)
-{
-  if (std::is_integral<T>::value)
-    return;
-  pVal->~T();
-}
-
-template<typename T, typename... Args> inline void ctConstruct(T *pVal, Args&&... args) { new(pVal) T(std::forward<Args>(args)...); }
+template<typename T, typename... Args> inline void ctConstruct(T *pVal, Args&&... args) { new (pVal) T(std::forward<Args>(args)...); }
 
 #endif

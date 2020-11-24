@@ -26,6 +26,7 @@
 #ifndef _atFile_h__
 #define _atFile_h__
 
+#include "ctOS.h"
 #include "ctFileInfo.h"
 #include "ctReadStream.h"
 #include "ctWriteStream.h"

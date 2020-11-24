@@ -28,10 +28,10 @@ bool ctCSV::Parse(const ctString &csv)
   for (const ctString &row : rows)
   {
     ctVector<ctString> cols = row.split(',', false);
-
     m_cells.push_back(std::move(cols));
   }
-  return false;
+
+  return true;
 }
 
 int64_t ctCSV::AsInt(const int64_t &row, const int64_t &column) const

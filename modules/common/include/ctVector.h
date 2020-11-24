@@ -89,7 +89,8 @@ public:
   template<typename... Args> void emplace(const int64_t index, Args&&... args);
 
   // Memory Management
-  void resize(const int64_t size, const T &initial = T());
+  void resize(const int64_t size);
+  void resize(const int64_t size, const T &initial);
   void reserve(const int64_t capacity);
 
   void shrink_to_fit();
@@ -170,7 +171,11 @@ protected:
 
   // Return false if [m_capacity] < [size]
   // Sets [m_size] to [size] on success
-  bool try_resize(const int64_t size, const T &initial = T());
+  bool try_resize(const int64_t size, const T &initial);
+
+  // Return false if [m_capacity] < [size]
+  // Sets [m_size] to [size] on success
+  bool try_resize(const int64_t size);
 
   // Returns false if [size] < [m_size]
   // Sets [m_pData] to new memory block on success
