@@ -29,6 +29,8 @@
 #include "ctAlloc.h"
 #include <type_traits>
 #include <forward_list>
+#include <memory>
+#include <xmemory>
 
 //*********************
 // Function Definitions
@@ -37,52 +39,88 @@
 #define ctNewArray(count, ...) new (_ctAllocTrace(sizeof(__VA_ARGS__) * count, __LINE__, __FILE__, "")) __VA_ARGS__[count]
 #define ctDelete(pBlock) (delete pBlock, ctReleaseMemRef((void*)pBlock))
 
-// Will Construct/Destruct object of they are non primitive types
-template<typename T, typename... Args> void ctConstruct(T *pVal, Args&&... args);
-template<typename T, typename... Args> void ctConstructArray(T *pVal, const int64_t count, Args&&... args);
-
-template<typename T> typename std::enable_if<std::is_destructible<T>::value>::type ctDestruct(T *pVal);
-template<typename T> typename std::enable_if<!std::is_destructible<T>::value>::type ctDestruct(T *pVal) { ctUnused(pVal); }
-template<typename T> typename std::enable_if<std::is_destructible<T>::value>::type ctDestructArray(T *pVal, const int64_t count);
-template<typename T> typename std::enable_if<!std::is_destructible<T>::value>::type ctDestructArray(T *pVal, const int64_t count) { ctUnused(pVal, count); }
-
-//*************************
-// Function Implementations
-
-template<typename T> typename std::enable_if<std::is_destructible<T>::value>::type ctDestructArray(T *pVal, int64_t count)
+template<typename T, typename... Args>
+inline void ctConstruct(T *pDst, Args&&... args)
 {
-  if (!std::is_trivially_destructible<T>::value)
-    while (count-- > 0)
-      ctDestruct(pVal++);
+  new (static_cast<void *>(&*pDst)) typename T(std::forward<Args>(args)...);
 }
 
-template<typename T, typename... Args> void ctConstructArray(T *pVal, int64_t count, Args&&... args)
+template<typename T>
+inline void ctDestruct(T *pDst)
+{
+  pDst->~T();
+}
+
+// Fill an array with a value
+template<typename T>
+inline void ctUninitializedFillArray(T *pDst, int64_t count, const T &value)
 {
   if (std::is_trivially_constructible<T>::value)
   {
-    if (count > 1)
-      new (pVal) T[count];
+    if (sizeof(T) == 1)
+    {
+      memset(pDst, *(uint8_t *)(&value), sizeof(T) * count);
+    }
     else
-      ctConstruct(pVal, std::forward<Args>(args)...);
+    {
+      for (; count--; ++pDst)
+        memcpy(pDst, &value, sizeof(T));
+    }
   }
   else
   {
-    T value(std::forward<Args>(args)...);
-    while (count-- > 0)
-      memcpy(pVal, &value, count * sizeof(T));
+    for (; count--; ++pDst)
+      new (static_cast<void *>(&*pDst)) typename T(value);
   }
 }
 
-template<typename T> inline void ctConstructArray(T *pVal, int64_t count)
+// Move construct [count] items from the source array to the destination array
+template<typename T>
+inline void ctUninitializedMoveArray(T *pDst, T *pSrc, int64_t count)
 {
-  if (std::is_integral<T>::value)
-    return;
-  while (count-- > 0)
-    ctConstruct(pVal++);
+  if (std::is_trivially_move_constructible<T>::value)
+  {
+    memcpy(pDst, pSrc, sizeof(T) * count);
+  }
+  else
+  {
+    for (; count--; ++pDst, ++pSrc)
+      new (static_cast<void *>(&*pDst)) typename T(std::move(*pSrc));
+  }
 }
 
-template<typename T> inline typename std::enable_if<std::is_destructible<T>::value>::type ctDestruct(T *pVal) { pVal->~T(); }
+// Copy construct [count] items from the source array to the destination array
+template<typename T>
+inline void ctUninitializedCopyArray(T *pDst, const T *pSrc, int64_t count)
+{
+  if (std::is_trivially_copy_constructible<T>::value)
+  {
+    memcpy(pDst, pSrc, count * sizeof(T));
+  }
+  else
+  {
+    for (; count--; ++pDst, ++pSrc)
+      new (static_cast<void *>(&*pDst)) typename T(*pSrc);
+  }
+}
 
-template<typename T, typename... Args> inline void ctConstruct(T *pVal, Args&&... args) { new (pVal) T(std::forward<Args>(args)...); }
+// Copy construct [count] items from the source array to the destination array
+template<typename T, typename T2>
+inline void ctUninitializedCopyArray(T *pDst, const T2 *pSrc, int64_t count)
+{
+  for (; count--; ++pDst, ++pSrc)
+    new (static_cast<void *>(&*pDst)) typename T(*pSrc);
+}
+
+// Destruct [count] items in the destination array
+template<typename T>
+inline void ctDestructArray(T *pDst, int64_t count)
+{
+  if (std::is_scalar<T>::value)
+    return;
+
+  for (; count--; ++pDst)
+    pDst->~T();
+}
 
 #endif

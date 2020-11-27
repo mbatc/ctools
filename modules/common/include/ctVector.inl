@@ -24,6 +24,14 @@
 // THE SOFTWARE.
 // -----------------------------------------------------------------------------
 
+template<typename T> ctVector<T>::ctVector() {}
+template<typename T> ctVector<T>::ctVector(const int64_t _reserve) { reserve(_reserve); }
+template<typename T> ctVector<T>::ctVector(const std::initializer_list<T> &list) { assign(list.begin(), list.end()); }
+template<typename T> ctVector<T>::ctVector(const T *pData, int64_t len) { assign(pData, pData + len); }
+template<typename T> ctVector<T>::ctVector(const int64_t size, const T &initial) { assign(initial, size); }
+template<typename T> ctVector<T>::ctVector(const ctVector<T> &copy) { assign(copy); }
+template<typename T> ctVector<T>::ctVector(const std::vector<T> &copy) { assign(copy); }
+
 template<typename T>
 template<typename T2>
 inline ctVector<T>::ctVector(const ctVector<T2> &vec)
@@ -75,19 +83,23 @@ inline void ctVector<T>::insert(const int64_t index, vector_const_iterator start
   int64_t startIndex = m_size;
   int64_t count = end - start;
   grow_reserve(m_size + count);
+  ctUninitializedCopyArray(m_pData + m_size, start, count);
+  m_size += count;
+  move_to_index(startIndex, index, count);
+}
 
-  if (std::is_integral<T>::value)
-  {
-    memcpy(m_pData + m_size, start, sizeof(T) * count);
-    m_size += count;
-  }
-  else
-  {
-    for (int64_t i = 0; start + i < end; i++)
-      emplace_back(*(start + i));
-  }
+template<typename T>
+inline void ctVector<T>::insert_move(const int64_t index, vector_iterator start, vector_iterator end)
+{
+  if (start >= end)
+    return;
 
-  move_to_index(startIndex, index, end - start);
+  int64_t startIndex = m_size;
+  int64_t count = end - start;
+  grow_reserve(m_size + count);
+  ctUninitializedMoveArray(m_pData + m_size, start, count);
+  m_size += count;
+  move_to_index(startIndex, index, count);
 }
 
 
@@ -96,7 +108,7 @@ template<typename... Args>
 inline void ctVector<T>::emplace_back_array(const int64_t count, Args&&... args)
 {
   grow_reserve(m_size + count);
-  ctConstructArray(m_pData + m_size, count, std::forward<Args>(args)...);
+  ctUninitializedFillArray(m_pData + m_size, count, T(std::forward<Args>(args)...));
   m_size += count;
 }
 
@@ -179,8 +191,7 @@ inline void ctVector<T>::assign(const T &item, const int64_t count)
 {
   clear();
   reserve(count);
-  for (int64_t i = 0; i < count; ++i)
-    emplace_back(item);
+  emplace_back_array(count, item);
 }
 
 template<typename T>
@@ -189,14 +200,7 @@ inline void ctVector<T>::assign(vector_const_iterator start, vector_const_iterat
   const int64_t count = end - start;
   clear();
   reserve(count);
-  if (std::is_integral<T>::value)
-  {
-    memcpy(m_pData, start, sizeof(T) * count);
-    m_size = count;
-  }
-  else
-    for (int64_t i = 0; i < count; ++i)
-      emplace_back(start[i]);
+  ctUninitializedCopyArray(data(), start, count);
 }
 
 template<typename T>
@@ -206,8 +210,7 @@ inline void ctVector<T>::assign(const T1* start, const T1* end)
   const int64_t count = end - start;
   clear();
   reserve(count);
-  for (int64_t i = 0; i < count; ++i)
-    push_back((T)start[i]);
+  ctUninitializedCopyArray(data(), start, count);
 }
 
 template<typename T>
@@ -364,12 +367,10 @@ inline void ctVector<T>::realloc(const int64_t size)
   if (size > 0)
   {
     pNew = (T*)ctAlloc(size * sizeof(T));
-    for (int64_t i = 0; i < m_size; ++i)
-    {
-      ctConstruct(pNew + i, std::move(m_pData[i]));
-      ctDestruct(m_pData + i);
-    }
+    ctUninitializedMoveArray(pNew, m_pData, m_size);
+    ctDestructArray(m_pData, m_size);
   }
+
   ctFree(m_pData);
   m_pData = pNew;
   m_capacity = size;
@@ -378,17 +379,20 @@ inline void ctVector<T>::realloc(const int64_t size)
 template<typename T> template<typename... Args> void ctVector<T>::emplace_back(Args&&... args)
 {
   grow_reserve(m_size + 1);
-  ctConstruct<T, Args...>(m_pData + m_size, std::forward<Args>(args)...);
+  ctConstruct(m_pData + m_size, std::forward<Args>(args)...);
   m_size += 1;
 }
 
-template<typename T> ctVector<T>::ctVector() {}
-template<typename T> ctVector<T>::ctVector(const int64_t _reserve) { reserve(_reserve); }
-template<typename T> ctVector<T>::ctVector(const std::initializer_list<T> &list) { assign(list.begin(), list.end()); }
-template<typename T> ctVector<T>::ctVector(const T* pData, int64_t len) { assign(pData, pData + len); }
-template<typename T> ctVector<T>::ctVector(const int64_t size, const T &initial) { assign(initial, size); }
-template<typename T> ctVector<T>::ctVector(const ctVector<T> &copy) { assign(copy); }
-template<typename T> ctVector<T>::ctVector(const std::vector<T> &copy) { assign(copy); }
+template<typename T> void ctVector<T>::push_back(const ctVector<T> &item)
+{
+  insert(m_size, item.begin(), item.end());
+}
+
+template<typename T> void ctVector<T>::push_back(ctVector<T> &&item)
+{
+  insert_move(m_size, item.begin(), item.end());
+  item.clear();
+}
 
 template<typename T> void ctVector<T>::move_to_back(const int64_t index, const int64_t count) { move_to_index(index, m_size - count, count); }
 template<typename T> void ctVector<T>::move_to_front(const int64_t index, const int64_t count) { move_to_index(index, 0, count); }
@@ -406,8 +410,6 @@ template<typename T> ctVector<T>::~ctVector() { make_empty(); }
 template<typename T> T* ctVector<T>::data() { return m_pData; }
 template<typename T> T& ctVector<T>::back() { return at(m_size - 1); }
 template<typename T> T& ctVector<T>::front() { return at(0); }
-template<typename T> void ctVector<T>::push_back(const ctVector<T> &item) { for (const T &i : item) push_back(i); }
-template<typename T> void ctVector<T>::push_back(ctVector<T> &&item) { for (T &i : item) push_back(std::move(i)); }
 template<typename T> void ctVector<T>::push_back(const T &item) { emplace_back(item); }
 template<typename T> void ctVector<T>::push_back(T &&item) { emplace_back(std::move(item)); }
 template<typename T> void ctVector<T>::pop_back() { shrink_by(1); }

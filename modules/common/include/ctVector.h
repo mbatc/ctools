@@ -82,6 +82,7 @@ public:
   void insert(const int64_t index, const ctVector<T> &items);
   void insert(const int64_t index, const std::vector<T> &items);
   void insert(const int64_t index, vector_const_iterator start, vector_const_iterator end);
+  void insert_move(const int64_t index, vector_iterator start, vector_iterator end);
 
   template<typename... Args> void emplace_back(Args&&... args);
   template<typename... Args> void emplace_back_array(const int64_t count, Args&&... args);
@@ -162,6 +163,7 @@ public:
   template<typename T2> operator std::vector<T2>();
 
 protected:
+  static void Initialize(T *pMem, const T &value);
 
   bool shrink_by(const int64_t count);
 

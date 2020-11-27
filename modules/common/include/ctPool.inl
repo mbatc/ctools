@@ -57,7 +57,7 @@ inline bool ctPool<T>::erase(const int64_t &index)
   if (!m_usedFlags[index])
     return false;
 
-  ctDestruct(m_pData + index);
+  ctDestructArray(m_pData, 1);
   m_freeSlots.push_back(index);
   m_usedFlags[index] = false;
   return true;
@@ -92,8 +92,8 @@ inline bool ctPool<T>::Grow(const int64_t &capacity)
   for (int64_t i = 0; i < m_capacity && i < capacity; ++i)
     if (m_usedFlags[i])
     {
-      ctConstruct(pNewMem + i, std::move(m_pData[i]));
-      ctDestruct(m_pData + i);
+      ctUninitializedMoveArray(pNewMem + i, m_pData + i, 1);
+      ctDestructArray(m_pData + 1, 1);
     }
 
   ctFree(m_pData);
@@ -126,7 +126,7 @@ inline int64_t ctPool<T>::emplace(Args&&... args)
     return -1;
 
   ++m_size;
-  ctConstruct(m_pData + slot, std::forward<Args>(args)...);
+  ctUninitializedFillArray(m_pData + slot, 1, T(std::forward<Args>(args)...));
   m_usedFlags[slot] = true;
   return slot;
 }

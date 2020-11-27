@@ -287,7 +287,8 @@ int64_t ctString::_find_last_of(const char *str, const char *find, int64_t start
 void ctString::set_string(const char *str, const int64_t len)
 {
   m_data.clear();
-  m_data.insert(0, str, str + len);
+  m_data.resize(len);
+  memcpy(m_data.data(), str, len);
   validate();
 }
 
