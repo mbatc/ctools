@@ -39,7 +39,7 @@ linkoptions { "/ignore:4075" }
 
 -- Project Files
 
-  files { "**.cpp", "**.h", "**.inl" }
+  files { "**.cpp", "**.h", "**.inl", "**.natvis" }
 
 -- Debug Configuration Settings
 

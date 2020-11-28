@@ -28,6 +28,8 @@ bool ctCSV::Parse(const ctString &csv)
   for (const ctString &row : rows)
   {
     ctVector<ctString> cols = row.split(',', false);
+    for (ctString &val : cols)
+      val = val.trim("\"");
     m_cells.push_back(std::move(cols));
   }
 

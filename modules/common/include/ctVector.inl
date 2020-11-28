@@ -192,6 +192,7 @@ inline void ctVector<T>::assign(const T &item, const int64_t count)
   clear();
   reserve(count);
   emplace_back_array(count, item);
+  m_size = count;
 }
 
 template<typename T>
@@ -201,6 +202,7 @@ inline void ctVector<T>::assign(vector_const_iterator start, vector_const_iterat
   clear();
   reserve(count);
   ctUninitializedCopyArray(data(), start, count);
+  m_size = count;
 }
 
 template<typename T>
@@ -211,6 +213,7 @@ inline void ctVector<T>::assign(const T1* start, const T1* end)
   clear();
   reserve(count);
   ctUninitializedCopyArray(data(), start, count);
+  m_size = count;
 }
 
 template<typename T>
