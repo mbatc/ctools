@@ -415,6 +415,10 @@ template<typename T> T& ctVector<T>::back() { return at(m_size - 1); }
 template<typename T> T& ctVector<T>::front() { return at(0); }
 template<typename T> void ctVector<T>::push_back(const T &item) { emplace_back(item); }
 template<typename T> void ctVector<T>::push_back(T &&item) { emplace_back(std::move(item)); }
+template<typename T> void ctVector<T>::push_front(const ctVector<T> &item) { insert(0, item); }
+template<typename T> void ctVector<T>::push_front(ctVector<T> &&item) { insert(0, std::move(item)); }
+template<typename T> void ctVector<T>::push_front(const T &item) { insert(0, item); }
+template<typename T> void ctVector<T>::push_front(T &&item) { insert(0, std::move(item)); }
 template<typename T> void ctVector<T>::pop_back() { shrink_by(1); }
 template<typename T> void ctVector<T>::pop_front() { erase(0); }
 template<typename T> void ctVector<T>::swap_pop_back(const int64_t index) { std::swap(at(index), back()); pop_back(); }

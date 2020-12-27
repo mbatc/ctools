@@ -73,6 +73,12 @@ public:
   void push_back(ctVector<T> &&item);
   void push_back(const T &item);
   void push_back(T &&item);
+  
+  void push_front(const ctVector<T> &item);
+  void push_front(ctVector<T> &&item);
+  void push_front(const T &item);
+  void push_front(T &&item);
+
   void pop_back();
   void pop_front();
   void swap_pop_back(const int64_t index);
