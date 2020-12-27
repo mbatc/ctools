@@ -30,9 +30,9 @@ int64_t _ScanIntegerFast(const char *str, int64_t *pLen)
   const char *start = str;
   int64_t val = 0;
   int neg = 0;
-  for (; ((str[0] < 48 || str[0] > 57) && str[0] != '-'); ++str);
+  for (; *str != 0 && (*str < 48 || *str > 57) && *str != '-'; ++str); // skip to characters
 
-  if (!str[0])
+  if (*str == 0)
     return 0;
 
   if (str[0] == '-')
@@ -54,11 +54,13 @@ double _ScanDoubleFast(const char *str, int64_t *pLen)
 {
   const char *start = str;
 
-  for (; ((str[0] < 48 || str[0] > 57) && str[0] != '-'); ++str); // skip to characters
-  if (!str[0])
+  for (; *str != 0 && (*str < 48 || *str > 57) && *str != '-'; ++str); // skip to characters
+
+  if (*str == 0)
     return 0;
-  int32_t sign = str[0];
-  str += sign == '-' || sign == '+';
+
+  int32_t sign = *str;
+  str += sign == '-';
 
   int64_t sum = 0;
   int32_t digitCount = 0;

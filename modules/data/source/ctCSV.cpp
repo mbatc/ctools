@@ -25,6 +25,8 @@ bool ctCSV::Parse(const ctString &csv)
     return false;
 
   ctVector<ctString> rows = csv.split("\r\n", true);
+  m_cells.reserve(rows.size());
+
   for (const ctString &row : rows)
   {
     ctVector<ctString> cols = row.split(',', false);
