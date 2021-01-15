@@ -72,13 +72,13 @@ inline OutT ctNthDerivative(const InT &val, OutT(*func)(InT), const int64_t &n, 
 }
 
 template<typename T>
-inline T ctSigmoid(const T &val)
+inline T ctSigmoid(T val)
 {
   return 1 / (1 + exp(-val));
 }
 
 template<typename T>
-inline T tmlSigmoidApprox(const T &val)
+inline T ctSigmoidApprox(const T &val)
 {
   static T sigLookup[] = {
     T(0),

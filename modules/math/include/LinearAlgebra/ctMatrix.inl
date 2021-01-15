@@ -24,6 +24,7 @@
 // -----------------------------------------------------------------------------
 
 #include <algorithm>
+#include "ctMatrix.h"
 
 template<typename T> ctMatrix<T> ctMatrix<T>::Identity(const int64_t &cols, const int64_t &rows)
 {
@@ -185,6 +186,10 @@ template<typename T> T& ctMatrix<T>::operator()(const int64_t row, const int64_t
 template<typename T> const T& ctMatrix<T>::operator()(const int64_t row, const int64_t col) const { return at(row, col); }
 template<typename T> int64_t ctMatrix<T>::Rows() const { return m_rows; }
 template<typename T> int64_t ctMatrix<T>::Columns() const { return m_columns; }
+template<typename T> T* ctMatrix<T>::begin() { return m_data.begin(); }
+template<typename T> T* ctMatrix<T>::end() { return m_data.end(); }
+template<typename T> const T* ctMatrix<T>::begin() const { return m_data.begin(); }
+template<typename T> const T* ctMatrix<T>::end() const { return m_data.end(); }
 
 template<typename T> ctMatrix<double> ctMatrix<T>::ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const { return ExtractRows(rows).ExtractColumns(columns); }
 

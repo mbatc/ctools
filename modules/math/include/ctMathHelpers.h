@@ -32,7 +32,7 @@ template<typename T> inline T ctACos(const T &rads);
 template<typename T> inline T ctATan(const T &rads);
 template<typename T> inline T ctATan2(const T &y, const T &x);
 
-template<typename T> inline T ctSigmoid(const T &val);
+template<typename T> inline T ctSigmoid(T val);
 template<typename InT, typename OutT> inline OutT ctDerivative(const InT &val, OutT (*func)(InT), const InT step = InT(0.001));
 template<typename InT, typename OutT> inline OutT ctNthDerivative(const InT &val, OutT(*func)(InT), const int64_t &n, const InT step = InT(0.001));
 

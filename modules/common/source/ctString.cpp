@@ -107,6 +107,7 @@ ctString ctString::substr(const int64_t start, const int64_t end) const
     return "";
 
   ctVector<char> subData;
+  subData.reserve(end - start + 1);
   subData.assign(m_data.begin() + ctMax(0, ctMin(start, length())), ctClamp(end < 0 ? m_data.end() : (m_data.begin() + end), m_data.begin(), m_data.end()));
   subData.push_back(0);
   return std::move(subData);

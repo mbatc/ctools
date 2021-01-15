@@ -24,14 +24,19 @@ bool ctCSV::Parse(const ctString &csv)
   if (csv.length() == 0)
     return false;
 
+  ctString cellTrimChars = ctString("\"") + ctString::Whitespace();
+  // Split by row
   ctVector<ctString> rows = csv.split("\r\n", true);
   m_cells.reserve(rows.size());
 
   for (const ctString &row : rows)
   {
-    ctVector<ctString> cols = row.split(',', false);
+    // Rows by columns
+    ctVector<ctString> cols = row.trim(ctString::Whitespace()).split(',', false);
+
     for (ctString &val : cols)
-      val = val.trim("\"");
+      val = val.trim(cellTrimChars);
+
     m_cells.push_back(std::move(cols));
   }
 

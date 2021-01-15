@@ -1,5 +1,5 @@
 
-template<typename T> inline ctObjectDescriptor::ctObjectDescriptor(const T &o) : ctObjectDescriptor() { ctSerialize(this, &o); }
+template<typename T> inline ctObjectDescriptor::ctObjectDescriptor(const T &o) : ctObjectDescriptor() { ctSerialize(this, o); }
 
 template<typename T> inline ctObjectDescriptor ctObjectDescriptor::operator=(const T &o) { return Serialize(o); }
 

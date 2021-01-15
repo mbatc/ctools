@@ -86,6 +86,12 @@ public:
   int64_t Rows() const;
   int64_t Columns() const;
 
+  T* begin();
+  T* end();
+
+  const T* begin() const;
+  const T* end() const;
+
   ctMatrix<double> ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const;
   ctMatrix<double> ExtractRows(const ctVector<int64_t> &rows) const;
   ctMatrix<double> ExtractColumns(const ctVector<int64_t> &columns) const;

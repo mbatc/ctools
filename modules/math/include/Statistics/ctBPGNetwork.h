@@ -26,6 +26,7 @@
 #ifndef atBPGNetwork_h__
 #define atBPGNetwork_h__
 
+#include "ctMathHelpers.h"
 #include "ctPredictiveModel.h"
 #include "../LinearAlgebra/ctMatrix.h"
 
