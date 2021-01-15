@@ -46,7 +46,7 @@ ctBPGNetwork::ctBPGNetwork(int64_t inputSize, int64_t outputSize, int64_t layerC
     for (double &val : m_layers[i - 1].weights.m_data)
       val = ctClamp((double)(rand() % 500) / 500, 0.1, 1.0);
     for (double &val : m_layers[i - 1].biases.m_data)
-      val = double(rand() % 1000ll - 500) / 500;
+      val = 0; // double(rand() % 1000ll - 500) / 500;
   }
 
   m_nOutputs = outputSize;
@@ -74,74 +74,70 @@ bool ctBPGNetwork::Train(const ctVector<ctVector<double>> &inputs, const ctVecto
     weightAdjustments.resize(activations.size() - 1);
     biasAdjustments.resize(activations.size() - 1);
 
-    ctMatrix<double> prevLayerRawActivationCostInfluence;
+    ctMatrix<double> prevRawActivationCostInfluence;
     for (int64_t currentLayer = activations.size() - 1; currentLayer > 0; --currentLayer)
     {
-      ctMatrix<double> &currentLayerRawActivations = rawActivations[currentLayer];
-      ctMatrix<double> &prevLayerRawActivations = rawActivations[currentLayer - 1];
-      ctMatrix<double> &currentLayerActivations = activations[currentLayer];
-      ctMatrix<double> &prevLayerActivations = activations[currentLayer - 1];
+      // Store relevant layer activations into some appropriately named variables
+      ctMatrix<double> &currentRawActivations = rawActivations[currentLayer];
+      ctMatrix<double> &prevRawActivations    = rawActivations[currentLayer - 1];
+      ctMatrix<double> &currentActivations    = activations[currentLayer];
+      ctMatrix<double> &prevActivations       = activations[currentLayer - 1];
 
-      // Raw activation influences on the cost function for the previous layer
-      ctMatrix<double> currentLayerRawWeightCostInfluence = prevLayerRawActivationCostInfluence;
-      prevLayerRawActivationCostInfluence = ctMatrix<double>(1, prevLayerActivations.m_rows, 0);
+      // Store the raw activation influences on the cost function for the previous layer
+      ctMatrix<double> currentRawWeightCostInfluence = prevRawActivationCostInfluence;
+      prevRawActivationCostInfluence = ctMatrix<double>(1, prevActivations.m_rows, 0);
 
       // Weight influences on the cost function for this layer
-      ctMatrix<double> layerWeightCostInfluence(currentLayerActivations.m_rows, prevLayerActivations.m_rows);
-      ctMatrix<double> layerLayerBiasCostInfluence(1, prevLayerRawActivations.m_rows);
+      ctMatrix<double> weightCostInfluence(currentActivations.m_rows, prevActivations.m_rows);
+      ctMatrix<double> biasCostInfluence(1, currentActivations.m_rows);
 
-      for (int64_t currentLayerNode = 0; currentLayerNode < currentLayerActivations.m_rows; ++currentLayerNode)
+      for (int64_t currentLayerNode = 0; currentLayerNode < currentActivations.m_rows; ++currentLayerNode)
       {
-        // double a = currentLayerActivations[currentLayerNode]; // Current layer activation value
-        for (int64_t prevLayerNode = 0; prevLayerNode < prevLayerActivations.m_rows; ++prevLayerNode)
+        for (int64_t prevLayerNode = 0; prevLayerNode < prevActivations.m_rows; ++prevLayerNode)
         {
-          // double aPrev = prevLayerActivations[prevLayerNode]; // Previous layer activation value
-
           // Compute derivative of the current layers activation with respect to the rawActivation
           double sigmoidActivationInfluence = 1;
           if (m_activationFunc)
-            sigmoidActivationInfluence = ctDerivative<double, double>(currentLayerRawActivations[currentLayerNode], m_activationFunc, 0.01);
+            sigmoidActivationInfluence = ctDerivative<double, double>(currentRawActivations[currentLayerNode], m_activationFunc, 0.01);
 
-          if (currentLayerRawWeightCostInfluence.m_rows == 0) // The current layer is the output layer
+          if (currentRawWeightCostInfluence.m_rows == 0) // The current layer is the output layer
           {
             // Compute derivative of the Cost function with respect to the current layers activation
-            double activationCostInfluence = 2 * (currentLayerActivations[currentLayerNode] - goal[currentLayerNode]);
-
+            double activationCostInfluence = 2 * (currentActivations[currentLayerNode] - goal[currentLayerNode]);
             sigmoidActivationInfluence *= activationCostInfluence;
           }
           else
           {
-            sigmoidActivationInfluence *= m_layers[currentLayer - 1].weights(prevLayerNode, currentLayerNode) * currentLayerRawWeightCostInfluence(currentLayerNode, 0);
+            sigmoidActivationInfluence *= m_layers[currentLayer - 1].weights(prevLayerNode, currentLayerNode) * currentRawWeightCostInfluence(currentLayerNode, 0);
           }
 
           // Compute derivative of the current layers activation with respect to the current layers weight
-          double activationWeightInfluence = prevLayerActivations[prevLayerNode];
+          double activationWeightInfluence = prevActivations[prevLayerNode];
 
           // Compute derivative of the Cost function with respect to the previous layers raw activation
           double prevRawWeightCostInfluence = sigmoidActivationInfluence;
 
           // Compute derivative of the Cost function with respect to the weight
-          double weightCostInfluence = prevRawWeightCostInfluence * activationWeightInfluence;
+          double nodeWeightCostInfluence = prevRawWeightCostInfluence * activationWeightInfluence;
 
-          // Add the weight influence to the weight cost influence
-          layerWeightCostInfluence(prevLayerNode, currentLayerNode) += weightCostInfluence;
-
-          layerLayerBiasCostInfluence(prevLayerNode, 0) += prevRawWeightCostInfluence;
+          // Add the influence for this node pair to the weight cost influence
+          weightCostInfluence(prevLayerNode, currentLayerNode) += nodeWeightCostInfluence;
+          biasCostInfluence(currentLayerNode, 0) += prevRawWeightCostInfluence;
 
           // Add the previous layers cost influence contributed by each node in this layer
-          prevLayerRawActivationCostInfluence(prevLayerNode, 0) += prevRawWeightCostInfluence;
+          prevRawActivationCostInfluence(prevLayerNode, 0) += prevRawWeightCostInfluence;
         }
       }
 
-      if (weightAdjustments[currentLayer - 1].m_rows != layerWeightCostInfluence.m_rows)
-        weightAdjustments[currentLayer - 1] = layerWeightCostInfluence;
+      if (weightAdjustments[currentLayer - 1].m_rows != weightCostInfluence.m_rows)
+        weightAdjustments[currentLayer - 1] = weightCostInfluence;
       else
-        weightAdjustments[currentLayer - 1] = weightAdjustments[currentLayer - 1] + layerWeightCostInfluence;
+        weightAdjustments[currentLayer - 1] = weightAdjustments[currentLayer - 1] + weightCostInfluence;
 
       if (biasAdjustments[currentLayer - 1].m_rows == 0)
-        biasAdjustments[currentLayer - 1] = prevLayerRawActivationCostInfluence;
+        biasAdjustments[currentLayer - 1] = biasCostInfluence;
       else
-        biasAdjustments[currentLayer - 1] = biasAdjustments[currentLayer - 1] + prevLayerRawActivationCostInfluence;
+        biasAdjustments[currentLayer - 1] = biasAdjustments[currentLayer - 1] + biasCostInfluence;
     }
   }
 
@@ -151,7 +147,6 @@ bool ctBPGNetwork::Train(const ctVector<ctVector<double>> &inputs, const ctVecto
     m_layers[i].weights = m_layers[i].weights - weightAdjustments[i].Mul(trainingAmount).Apply([](double val) { return ctClamp(val, -1.0, 1.0); });
   for (int64_t i = 0; i < m_layers.size(); ++i)
     m_layers[i].biases = m_layers[i].biases - biasAdjustments[i].Mul(trainingAmount);
-
   return true;
 }
 

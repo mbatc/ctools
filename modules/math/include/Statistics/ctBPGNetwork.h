@@ -79,7 +79,7 @@ protected:
   int64_t m_nOutputs = 0;
   int64_t m_layerSize = 0;
   ctVector<Layer> m_layers;
-  double(*m_activationFunc)(double); // = atSigmoid<double>;
+  double(*m_activationFunc)(double) = nullptr; // = atSigmoid<double>;
 };
 
 int64_t ctStreamRead(ctReadStream *pStream, ctBPGNetwork::Layer *pData, const int64_t count);

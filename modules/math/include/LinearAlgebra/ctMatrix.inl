@@ -85,6 +85,16 @@ template<typename T> template<typename T2> ctMatrix<T> ctMatrix<T>::Mul(const ct
   return ret;
 }
 
+template<typename T> template<typename T2> ctMatrix<T> ctMatrix<T>::MulElementWise(const ctMatrix<T2> &rhs) const
+{
+  ctAssert(m_rows == rhs.m_rows && m_columns == rhs.m_columns, "Matrices must have the same dimensions to perform an element-wise multiply");
+  ctMatrix<T> ret = *this;
+  for (int64_t r = 0; r < m_rows; ++r)
+    for (int64_t c = 0; c < m_columns; ++c)
+      ret(r, c) *= (T)rhs(r, c);
+  return ret;
+}
+
 template<typename T> template<typename T2> ctMatrix<T> ctMatrix<T>::Add(const ctMatrix<T2> &rhs) const
 {
   ctMatrix<T> ret = *this;
@@ -154,9 +164,10 @@ template<typename T> template <typename T2> ctMatrix<T>::ctMatrix(const ctMatrix
 }
 
 template<typename T> ctMatrix<T> ctMatrix<T>::Mul(const ctMatrix<T> &rhs) const { return Mul<T>(rhs); }
+template<typename T> ctMatrix<T> ctMatrix<T>::MulElementWise(const ctMatrix<T> &rhs) const { return MulElementWise<T>(rhs); }
+
 template<typename T> ctMatrix<T> ctMatrix<T>::operator*(const ctMatrix<T>& rhs) const { return Mul<T>(rhs); }
 template<typename T> template <typename T2> ctMatrix<T> ctMatrix<T>::operator*(const ctMatrix<T2>& rhs) const { return Mul<T2>(rhs); }
-
 template<typename T> template <typename T2> ctMatrix<T> ctMatrix<T>::operator/(const T2 &rhs) const { return Mul<T2>((T)1 / rhs); }
 template<typename T> template <typename T2> ctMatrix<T> ctMatrix<T>::operator+(const ctMatrix<T2>& rhs) const { return Add(rhs); }
 template<typename T> template <typename T2> ctMatrix<T> ctMatrix<T>::operator-(const ctMatrix<T2>& rhs) const { return Sub(rhs); }
@@ -174,6 +185,27 @@ template<typename T> T& ctMatrix<T>::operator()(const int64_t row, const int64_t
 template<typename T> const T& ctMatrix<T>::operator()(const int64_t row, const int64_t col) const { return at(row, col); }
 template<typename T> int64_t ctMatrix<T>::Rows() const { return m_rows; }
 template<typename T> int64_t ctMatrix<T>::Columns() const { return m_columns; }
+
+template<typename T> ctMatrix<double> ctMatrix<T>::ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const { return ExtractRows(rows).ExtractColumns(columns); }
+
+template<typename T> ctMatrix<double> ctMatrix<T>::ExtractRows(const ctVector<int64_t> &rows) const
+{
+  ctMatrix ret(Columns(), rows.size());
+  for (int64_t c = 0; c < Columns(); ++c)
+    for (int64_t r = 0; r < rows.size(); ++r)
+      ret(r, c) = at(rows[r], c);
+  return ret;
+}
+
+template<typename T> ctMatrix<double> ctMatrix<T>::ExtractColumns(const ctVector<int64_t> &columns) const
+{
+  ctMatrix ret(columns.size(), Rows());
+  for (int64_t c = 0; c < columns.size(); ++c)
+    for (int64_t r = 0; r < Rows(); ++r)
+      ret(r, c) = at(r, columns[c]);
+  return ret;
+}
+
 template<typename T> ctMatrix<T> ctMatrix<T>::Sub(const T &rhs) const { return Add(-rhs); }
 template<typename T> T &ctMatrix<T>::at(const int64_t row, const int64_t col) { return m_data[col + row * m_columns]; }
 template<typename T> const T &ctMatrix<T>::at(const int64_t row, const int64_t col) const { return m_data[col + row * m_columns]; }

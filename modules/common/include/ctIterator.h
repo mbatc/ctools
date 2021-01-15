@@ -33,8 +33,8 @@ template<typename T> class ctIterator
 public:
   ctIterator(T *pStart, const int64_t len);
 
-  T* begin();
-  T* end();
+  T* begin() const;
+  T* end() const;
 
   T* m_pBegin;
   T* m_pEnd;
@@ -55,6 +55,18 @@ public:
 
 template<typename T> ctIterator<T> ctIterate(T *pStart, int64_t len);
 template<typename T> ctIteratorConst<T> ctIterate(const T *pStart, int64_t len);
+
+template<typename T, size_t N>
+ctIterator<T> ctIterate(T (&arr) [N])
+{
+  return ctIterate(arr, N);
+}
+
+template<typename T, size_t N>
+ctIteratorConst<T> ctIterate(const T (&arr)[N])
+{
+  return ctIterate(arr, N);
+}
 
 #include "ctIterator.inl"
 

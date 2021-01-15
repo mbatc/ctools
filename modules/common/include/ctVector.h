@@ -169,8 +169,6 @@ public:
   template<typename T2> operator std::vector<T2>();
 
 protected:
-  static void Initialize(T *pMem, const T &value);
-
   bool shrink_by(const int64_t count);
 
   // Vector will only resize if [capacity] > [m_capacity]

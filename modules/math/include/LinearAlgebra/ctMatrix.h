@@ -46,21 +46,24 @@ public:
 
   T Determinate() const;
 
-  template <typename T2> ctMatrix<T> Mul(const ctMatrix<T2> &rhs) const;
-  template <typename T2> ctMatrix<T> operator*(const ctMatrix<T2> &rhs) const;
-
   ctMatrix<T> Mul(const ctMatrix<T> &rhs) const;
+  ctMatrix<T> MulElementWise(const ctMatrix<T> &rhs) const;
   ctMatrix<T> operator*(const ctMatrix<T> &rhs) const;
-
-  template <typename T2> ctMatrix<T> Add(const ctMatrix<T2> &rhs) const;
-  template <typename T2> ctMatrix<T> Sub(const ctMatrix<T2> &rhs) const;
 
   ctMatrix<T> Mul(const T &rhs) const;
   ctMatrix<T> Sub(const T &rhs) const;
   ctMatrix<T> Add(const T &rhs) const;
+
   ctMatrix<T> Apply(std::function<T(T)> func);
 
   ctMatrix<T> LowOrderMatrix(const int64_t x, const int64_t y, const int64_t dim) const;
+
+  template <typename T2> ctMatrix<T> Mul(const ctMatrix<T2> &rhs) const;
+  template <typename T2> ctMatrix<T> MulElementWise(const ctMatrix<T2> &rhs) const;
+  template <typename T2> ctMatrix<T> operator*(const ctMatrix<T2> &rhs) const;
+
+  template <typename T2> ctMatrix<T> Add(const ctMatrix<T2> &rhs) const;
+  template <typename T2> ctMatrix<T> Sub(const ctMatrix<T2> &rhs) const;
 
   template <typename T2> ctMatrix<T> operator/(const T2 &rhs) const;
   template <typename T2> ctMatrix<T> operator+(const ctMatrix<T2> &rhs) const;
@@ -68,11 +71,11 @@ public:
 
   bool operator==(const ctMatrix<T> &rhs) const;
   bool operator!=(const ctMatrix<T> &rhs) const;
-  const ctMatrix<T> &operator=(const ctMatrix<T> &copy);
+  const ctMatrix<T>& operator=(const ctMatrix<T> &copy);
   template <typename T2> const ctMatrix<T>& operator=(const ctMatrix<T2> &copy);
 
-  T &at(const int64_t row, const int64_t col);
-  const T &at(const int64_t row, const int64_t col) const;
+  T& at(const int64_t row, const int64_t col);
+  const T& at(const int64_t row, const int64_t col) const;
 
   T& operator[](const int64_t index);
   const T& operator[](const int64_t index) const;
@@ -82,6 +85,10 @@ public:
 
   int64_t Rows() const;
   int64_t Columns() const;
+
+  ctMatrix<double> ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const;
+  ctMatrix<double> ExtractRows(const ctVector<int64_t> &rows) const;
+  ctMatrix<double> ExtractColumns(const ctVector<int64_t> &columns) const;
 
   ctVector<T> m_data;
   int64_t m_rows;

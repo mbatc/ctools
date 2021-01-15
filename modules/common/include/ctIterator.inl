@@ -35,8 +35,8 @@ template<typename T> ctIteratorConst<T>::ctIteratorConst(const T *pStart, const 
   m_pEnd = pStart + ctMax(len, 0);
 }
 
-template<typename T> T* ctIterator<T>::begin() { return m_pBegin; }
-template<typename T> T* ctIterator<T>::end() { return m_pEnd; }
+template<typename T> T* ctIterator<T>::begin() const { return m_pBegin; }
+template<typename T> T* ctIterator<T>::end() const { return m_pEnd; }
 template<typename T> const T* ctIteratorConst<T>::begin() const { return m_pBegin; }
 template<typename T> const T* ctIteratorConst<T>::end() const { return m_pEnd; }
 
