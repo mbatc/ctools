@@ -179,9 +179,9 @@ inline void ctObject::SetType()
     return;
 
   Destroy();
-  m_destructFunc = __atObjectDestructFunc<std::decay_t<T>>;
-  m_copyFunc = __atObjectCopyFunc<std::decay_t<T>>;
-  m_moveFunc = __atObjectMoveFunc<std::decay_t<T>>;
+  m_destructFunc = __ctObjectDestructFunc<std::decay_t<T>>;
+  m_copyFunc = __ctObjectCopyFunc<std::decay_t<T>>;
+  m_moveFunc = __ctObjectMoveFunc<std::decay_t<T>>;
   m_typeInfo = typeid(T);
   m_data.resize(sizeof(T));
 }
