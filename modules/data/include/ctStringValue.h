@@ -20,6 +20,8 @@ public:
   ctStringValue& Set(const ctString &val);
   ctStringValue& Set(const bool &val);
 
+  bool IsEmpty() const;
+
   bool    AsBool() const;
   double  AsFloat() const;
   int64_t AsInt() const;
@@ -39,6 +41,8 @@ public:
   explicit operator ctString() const;
 
   const ctType& GetType() const;
+
+  friend ctString ctToString(const ctStringValue &o);
 
 protected:
   ctStringValue& SetValue(const ctString &str, const ctType &type);

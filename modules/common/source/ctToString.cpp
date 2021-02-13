@@ -15,3 +15,4 @@ ctString ctToString(const uint32_t val) { return ctPrint::Int(val); }
 ctString ctToString(const double val) { return ctPrint::Float(val); }
 ctString ctToString(const float val) { return ctPrint::Float(val); }
 ctString ctToString(const bool val, const bool verbose) { return ctPrint::Bool(val, verbose); }
+ctString ctToString(const ctString &str) { return str; }

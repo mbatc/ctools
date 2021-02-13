@@ -93,7 +93,7 @@ inline bool ctPool<T>::Grow(const int64_t &capacity)
     if (m_usedFlags[i])
     {
       ctUninitializedMoveArray(pNewMem + i, m_pData + i, 1);
-      ctDestructArray(m_pData + 1, 1);
+      ctDestructArray(m_pData + i, 1);
     }
 
   ctFree(m_pData);

@@ -33,53 +33,70 @@ bool ctCSV::Parse(const ctString &csv)
   {
     // Rows by columns
     ctVector<ctString> cols = row.trim(ctString::Whitespace()).split(',', false);
-
+    m_cells.emplace_back();
+    m_cells.back().reserve(cols.size());
     for (ctString &val : cols)
-      val = val.trim(cellTrimChars);
-
-    m_cells.push_back(std::move(cols));
+      m_cells.back().emplace_back(val.trim(cellTrimChars));
   }
 
   return true;
 }
 
+ctStringValue ctCSV::Get(const int64_t &row, const int64_t &column) const
+{
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return pVal ? *pVal : ctStringValue();
+}
+
+ctType ctCSV::GetType(const int64_t &row, const int64_t &column) const
+{
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return pVal ? pVal->GetType() : ctType_Unknown;
+}
+
 int64_t ctCSV::AsInt(const int64_t &row, const int64_t &column) const
 {
-  const ctString *pVal = TryGetValue(row, column);
-  return pVal ? ctScan::Int(*pVal) : 0;
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return pVal ? pVal->AsInt() : 0;
 }
 
 bool ctCSV::AsBool(const int64_t &row, const int64_t &column) const
 {
-  const ctString *pVal = TryGetValue(row, column);
-  return pVal ? ctScan::Bool(*pVal) : 0;
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return pVal ? pVal->AsBool() : 0;
 }
 
 double ctCSV::AsFloat(const int64_t &row, const int64_t &column) const
 {
-  const ctString *pVal = TryGetValue(row, column);
-  return pVal ? ctScan::Float(*pVal) : 0;
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return pVal ? pVal->AsFloat() : 0;
 }
 
 ctString ctCSV::AsString(const int64_t &row, const int64_t &column) const
 {
-  const ctString *pVal = TryGetValue(row, column);
-  return pVal ? *pVal : "";
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return pVal ? pVal->AsString() : "";
 }
 
-void ctCSV::SetValue(const ctString &value, const int64_t &row, const int64_t &col)
+bool ctCSV::IsEmpty(const int64_t &row, const int64_t &column) const
 {
-  ctString *pCell = TryGetValue(row, col);
+  const ctStringValue *pVal = TryGetValue(row, column);
+  return !pVal || pVal->IsEmpty();
+}
+
+void ctCSV::Set(const ctStringValue &value, const int64_t &row, const int64_t &col)
+{
+  ctStringValue *pCell = TryGetValue(row, col);
   if (pCell)
     *pCell = value;
   else
-    AddValue(value, row, col);
+    Add(value, row, col);
 }
 
-bool ctCSV::AddValue(const ctString &value, const int64_t &row, const int64_t &col)
+bool ctCSV::Add(const ctStringValue &value, const int64_t &row, const int64_t &col)
 {
-  ctString *pCell = TryGetValue(row, col);
-  if (pCell && pCell->length() > 0)
+  ctStringValue *pCell = TryGetValue(row, col);
+  if (pCell && !pCell->IsEmpty())
     return false;
 
   if (!pCell)
@@ -96,15 +113,20 @@ bool ctCSV::AddValue(const ctString &value, const int64_t &row, const int64_t &c
   return true;
 }
 
-const ctString* ctCSV::TryGetValue(const int64_t &row, const int64_t &col) const { return col >= 0 && col < GetColCount(row) ? &m_cells[row][col] : nullptr; }
-ctString* ctCSV::TryGetValue(const int64_t &row, const int64_t &col) { return col >= 0 && col < GetColCount(row) ? &m_cells[row][col] : nullptr; }
+const ctStringValue* ctCSV::TryGetValue(const int64_t &row, const int64_t &col) const { return col >= 0 && col < GetColCount(row) ? &m_cells[row][col] : nullptr; }
+ctStringValue * ctCSV::TryGetValue(const int64_t &row, const int64_t &col) { return col >= 0 && col < GetColCount(row) ? &m_cells[row][col] : nullptr; }
 int64_t ctCSV::GetRowCount() const { return m_cells.size(); }
 int64_t ctCSV::GetColCount(const int64_t &row) const { return row >= 0 && row < GetRowCount() ? m_cells[row].size() : 0; }
 
 ctString ctToString(const ctCSV &csv)
 {
   ctVector<ctString> joinedRows;
-  for (const ctVector<ctString> &row : csv.m_cells)
-    joinedRows.push_back(ctString::join(row, ",", false));
+  for (const ctVector<ctStringValue> &row : csv.m_cells)
+  {
+    ctString joined = "";
+    for (int64_t i = 0; i < row.size(); ++i)
+      joined += (i == 0 ? row[i] : ("," + row[i].AsString()));
+    joinedRows.emplace_back(std::move(joined));
+  }
   return ctString::join(joinedRows, "\n", false);
 }

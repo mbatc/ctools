@@ -99,10 +99,11 @@ void ctObjectDescriptor::Import(const ctJSON &json)
   }
   else if (json.IsValue())
   {
-    if (json.IsString())
-      Set(json.Value());
-    else
-      SetFromString(json.Value());
+    SetFromString(json.Value());
+  }
+  else if (json.IsString())
+  {
+    Set(json.Value());
   }
   else if (json.IsNull())
   {

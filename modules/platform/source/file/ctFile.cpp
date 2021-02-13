@@ -87,21 +87,26 @@ int64_t ctFile::Write(const void *pData, const int64_t len)
   return ctOS::File::Write(m_handle, pData, len);
 }
 
-ctString ctFile::ReadText()
+ctString ctFile::ReadText(bool *pResult)
 {
+  if (pResult) *pResult = false;
   if (!IsOpen() || m_info.Size() == 0)
     return "";
+
   ctVector<char> data(m_info.Size(), 0);
   Read(data.data(), data.size());
+  if (pResult) *pResult = true;
   return data.data();
 }
 
-ctString ctFile::ReadText(const ctFilename &filename)
+ctString ctFile::ReadText(const ctFilename &filename, bool *pResult)
 {
+  if (pResult) *pResult = false;
+
   ctFile file;
   ctString ret;
   if (file.Open(filename, atFM_Read))
-    ret = file.ReadText();
+    ret = file.ReadText(pResult);
   return ret;
 }
 

@@ -36,6 +36,7 @@ ctStringValue &ctStringValue::Set(const int64_t &val) { return SetValue(ctPrint:
 ctStringValue &ctStringValue::Set(const ctString &val) { return SetValue(val, ctType_Unknown); }
 ctStringValue &ctStringValue::Set(const bool &val) { return SetValue(ctPrint::Bool(val), ctType_Uint8); }
 
+bool ctStringValue::IsEmpty() const { return m_value.length() == 0; }
 bool ctStringValue::AsBool() const { return ctScan::Bool(m_value); }
 double ctStringValue::AsFloat() const { return ctScan::Float(m_value); }
 int64_t ctStringValue::AsInt() const { return ctScan::Int(m_value); }
@@ -53,3 +54,5 @@ ctStringValue &ctStringValue::operator=(const ctString &value) { return Set(valu
 ctStringValue &ctStringValue::operator=(const bool &value) { return Set(value); }
 ctStringValue &ctStringValue::operator=(const int64_t &value) { return Set(value); }
 ctStringValue &ctStringValue::operator=(const double &value) { return Set(value); }
+
+ctString ctToString(const ctStringValue &o) { return o.m_value; }

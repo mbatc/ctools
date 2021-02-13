@@ -31,19 +31,20 @@ template<> int64_t ctSize(const ctType &val)
   {
   case ctType_Float32: return 4;
   case ctType_Float64: return 8;
-  case ctType_Int8: return 1;
-  case ctType_Int16: return 2;
-  case ctType_Int32: return 4;
-  case ctType_Int64: return 8;
-  case ctType_Uint8: return 1;
-  case ctType_Uint16: return 2;
-  case ctType_Uint32: return 4;
-  case ctType_Uint64: return 8;
+  case ctType_Int8:    return 1;
+  case ctType_Int16:   return 2;
+  case ctType_Int32:   return 4;
+  case ctType_Int64:   return 8;
+  case ctType_Bool:    return 1;
+  case ctType_Uint8:   return 1;
+  case ctType_Uint16:  return 2;
+  case ctType_Uint32:  return 4;
+  case ctType_Uint64:  return 8;
   default: return 0;
   }
 }
 
-template<> ctType ctGetType<bool>() { return ctType_Uint8; }
+template<> ctType ctGetType<bool>() { return ctType_Bool; }
 template<> ctType ctGetType<char>() { return ctType_Uint8; }
 template<> ctType ctGetType<wchar_t>() { return ctType_Uint16; }
 
@@ -83,7 +84,8 @@ bool ctTypeCast(void *pDst, const void *pSrc, const ctTypeDesc &dstType, const c
   case ctType_Int16: return __ctTypeCast(pDst, (int16_t*)pSrc, dstType.type, count);
   case ctType_Int32: return __ctTypeCast(pDst, (int32_t*)pSrc, dstType.type, count);
   case ctType_Int64: return __ctTypeCast(pDst, (int64_t*)pSrc, dstType.type, count);
-  case ctType_Uint8: return __ctTypeCast(pDst, (uint8_t*)pSrc, dstType.type, count);
+  case ctType_Bool: return __ctTypeCast(pDst, (bool *)pSrc, dstType.type, count);
+  case ctType_Uint8: return __ctTypeCast(pDst, (uint8_t *)pSrc, dstType.type, count);
   case ctType_Uint16: return __ctTypeCast(pDst, (uint16_t*)pSrc, dstType.type, count);
   case ctType_Uint32: return __ctTypeCast(pDst, (uint32_t*)pSrc, dstType.type, count);
   case ctType_Uint64: return __ctTypeCast(pDst, (uint64_t*)pSrc, dstType.type, count);

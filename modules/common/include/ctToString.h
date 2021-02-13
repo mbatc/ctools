@@ -16,5 +16,6 @@ ctString ctToString(const uint32_t val);
 ctString ctToString(const double val);
 ctString ctToString(const float val);
 ctString ctToString(const bool val, const bool verbose = true);
+ctString ctToString(const ctString &str);
 
 #endif // atToString_h__

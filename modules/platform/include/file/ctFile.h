@@ -63,8 +63,8 @@ public:
   // Writes pData to the file
   int64_t WriteText(const ctString &text);
 
-  ctString ReadText();
-  static ctString ReadText(const ctFilename &filename);
+  ctString ReadText(bool *pResult = nullptr);
+  static ctString ReadText(const ctFilename &filename, bool *pResult = nullptr);
 
   static int64_t WriteFile(const ctFilename &filename, const void *pData, const int64_t &len);
   static int64_t WriteTextFile(const ctFilename &filename, const ctString &content);

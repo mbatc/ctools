@@ -32,6 +32,7 @@
 #include <tuple>
 
 #include "ctUtility.h"
+#include <xtr1common>
 
 #define CT_INVALID_ID (int64_t)-1
 #define CT_INVALID_INDEX (int64_t)-1
@@ -50,6 +51,7 @@ enum ctType : int64_t
   ctType_Int32,
   ctType_Int64,
 
+  ctType_Bool,
   ctType_Uint8,
   ctType_Uint16,
   ctType_Uint32,
@@ -107,7 +109,12 @@ template<typename T> ctTypeDesc ctGetTypeDesc() { return ctTypeDesc(ctGetType<T>
 template<typename T> ctTypeDesc ctGetTypeDesc(const T &unused) { ctUnused(unused); return ctGetTypeDesc<T>(); }
 
 // Type case helpers
-template<typename T1, typename T2> bool __ctTypeCast(T1 *pDst, const T2 *pSrc, const int64_t &count);
+template<typename T1, typename T2>
+bool __ctTypeCast(T1 *pDst, const T2 *pSrc, const typename std::enable_if<!std::is_same<T1, bool>::value, int64_t >::type &count);
+
+template<typename T1, typename T2>
+bool __ctTypeCast(T1 *pDst, const T2 *pSrc, const typename std::enable_if<std::is_same<T1, bool>::value, int64_t >::type &count);
+
 template<typename T> bool __ctTypeCast(T *pDst, const T *pSrc, const int64_t &count);
 template<typename T> bool __ctTypeCast(void *pDst, const T *pSrc, const ctType &dstType, const int64_t &count);
 
