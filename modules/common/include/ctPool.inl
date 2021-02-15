@@ -130,3 +130,24 @@ inline int64_t ctPool<T>::emplace(Args&&... args)
   m_usedFlags[slot] = true;
   return slot;
 }
+
+template<typename T>
+typename ctPool<T>::Iterator ctPool<T>::begin() { return Iterator(this, 0); }
+
+template<typename T>
+typename ctPool<T>::Iterator ctPool<T>::end()
+{
+  return Iterator(this, m_capacity);
+}
+
+template<typename T>
+typename ctPool<T>::ConstIterator ctPool<T>::begin() const
+{
+  return ConstIterator(this, 0);
+}
+
+template<typename T>
+typename ctPool<T>::ConstIterator ctPool<T>::end() const
+{
+  return ConstIterator(this, m_capacity);
+}

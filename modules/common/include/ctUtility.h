@@ -75,6 +75,8 @@ template<typename T, typename T2, typename... Args> inline T ctMax(const T &firs
 
 template<typename T, typename T2, typename T3> inline T ctClamp(const T &val, const T2 &min, const T3 &max);
 
+template<typename T> int64_t ctIndexOf(const T *pBegin, const T *pEnd, const T &find);
+
 #define ctArraySize(val) (sizeof(val) / sizeof(decltype(val[0])))
 
 #include "ctUtility.inl"

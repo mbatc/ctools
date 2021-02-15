@@ -33,23 +33,57 @@ public:
   class Iterator
   {
     friend ctPool;
+    Iterator(ctPool *pPool, int64_t start)
+    {
+      m_pPool = pPool;
+      m_index = start;
+      EnsureValid();
+    }
 
-    Iterator(ctPool *pPool, int64_t start);
-    Iterator(const Iterator &it);
+  public:
+    Iterator(const Iterator &it)
+    {
+      m_pPool = it.m_pPool;
+      m_index = it.m_index;
+    }
 
-    bool operator==(const Iterator &rhs) const;
-    Iterator& operator++();
+    bool operator==(const Iterator &rhs) const { return rhs.m_index == m_index && rhs.m_pPool == m_pPool; }
+    bool operator!=(const Iterator &rhs) const { return !(*this == rhs); }
+
+    Iterator& operator++()
+    {
+      m_index = ctMin(m_index + 1, m_pPool->capacity());
+      EnsureValid();
+      return *this;
+    }
+
+    T *operator->() const { return &m_pPool->at(m_index); }
+    T &operator*() const { return m_pPool->at(m_index); }
+
+  protected:
+    void EnsureValid()
+    {
+      while (m_index < m_pPool->capacity() && !m_pPool->m_usedFlags[m_index])
+        ++m_index;
+    }
+
+    ctPool *m_pPool = nullptr;
+    int64_t m_index = 0;
   };
 
-  class ConstIterator
+  class ConstIterator : public Iterator
   {
     friend ctPool;
+    ConstIterator(ctPool *pPool, int64_t start) : Iterator(pPool, start) {}
 
-    ConstIterator(ctPool *pPool, int64_t start);
-    ConstIterator(const ConstIterator &it);
+  public:
+    ConstIterator(const ConstIterator &it) : Iterator((Iterator const &)it) {}
 
-    bool operator==(const ConstIterator &rhs) const;
-    ConstIterator& operator++();
+    bool operator==(const ConstIterator &rhs) const{ return Iterator::operator==((Iterator const &)rhs); }
+    bool operator!=(const ConstIterator &rhs) const { return Iterator::operator!=((Iterator const &)rhs); }
+    ConstIterator& operator++() { return (ConstIterator&)Iterator::operator++(); }
+    const T* operator->() const { return Iterator::operator->(); }
+    const T &operator*() const { return Iterator::operator*(); }
   };
 
   // Construct a pool with the specified initial capacity
@@ -82,6 +116,12 @@ public:
   // Accessor operators
   T& operator[](const int64_t &index);
   const T& operator[](const int64_t &index) const;
+
+  Iterator begin();
+  Iterator end();
+
+  ConstIterator begin() const;
+  ConstIterator end() const;
 
 protected:
   bool TryGrow(const int64_t &requiredCapacity);

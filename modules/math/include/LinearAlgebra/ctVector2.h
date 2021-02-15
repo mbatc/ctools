@@ -1,7 +1,7 @@
 #ifndef tmlVector2_h__
 #define tmlVector2_h__
 
-#include "ctMathHelpers.h"
+#include "../ctMathHelpers.h"
 
 template<typename T> class ctVector2
 {

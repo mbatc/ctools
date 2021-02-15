@@ -15,3 +15,15 @@ template<typename T, typename T2, typename... Args> inline T ctMax(const T &firs
 }
 
 template<typename T, typename T2, typename T3> inline T ctClamp(const T &val, const T2 &min, const T3 &max) { return ctMin(max, ctMax(min, val)); }
+
+template<typename T> int64_t ctIndexOf(const T *pBegin, const T *pEnd, const T &find)
+{
+  const T *pVal = pBegin;
+  while (*pVal != find)
+  {
+    ++pVal;
+    if (pVal >= pEnd)
+      return -1;
+  }
+  return int64_t(pVal - pBegin);
+}
