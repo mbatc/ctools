@@ -1,13 +1,13 @@
 ##  Welcome to CTools
 
-CTools is a library that contains helpful tools I've written while working on various projects. Much of the code is ripped and renamed from https://github.com/mbatc/atLib , which was the main library I wrote. It was getting a bit beastly so I decided to split it up into smaller modules with _mainly_ platform independent code.
+CTools is a library that contains helpful tools I've written while working on various projects. Much of the code is ripped and renamed from my other library https://github.com/mbatc/atLib. It was getting a bit beastly so I decided to split it up into smaller modules with _mainly_ platform independent code to be used in smaller projects.
 
 For me, this library is a hobby project which I develop on and off in my free time. As such there are no guaratees made that everything will work as intended. I'm sure there are probably plenty of bugs (big and small) scattered about.
 
 
 ## Licensing
 
-All source code in this repository is License under the following:
+All source code in this repository is Licensed under the following:
 
 ### The MIT License
 
@@ -33,7 +33,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
-All 3rdParty code is distributed under the licenses supplied by it's owner/s. Details can be found in the following section, or in the folder containing the goven 3rdParty source or binaries.
+All 3rdParty code is distributed under the licenses supplied by it's owner/s. Details can be found in the following section, or in the folder containing the given 3rdParty source or binaries.
 
 ## 3rd Party Library Acknowledgements
 
