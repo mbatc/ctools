@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------
 
 #include <algorithm>
-#include "ctMatrix.h"
 
 template<typename T> ctMatrix<T> ctMatrix<T>::Identity(const int64_t &cols, const int64_t &rows)
 {
@@ -151,6 +150,13 @@ template<typename T> ctMatrix<T>::ctMatrix(int64_t _col, int64_t _row, const std
     m_data[i] = (T)(*(list.begin() + i));
 }
 
+template<typename T> ctMatrix<T>::ctMatrix(int64_t _col, int64_t _row, const ctVector<T> &list)
+  : ctMatrix<T>(_col, _row)
+{
+  for (int64_t i = 0; i < (int64_t)list.size() && i < m_rows * m_columns; ++i)
+    m_data[i] = list[i];
+}
+
 template<typename T> template <typename T2> const ctMatrix<T>& ctMatrix<T>::operator=(const ctMatrix<T2> &rhs)
 {
   for (int64_t i = 0; i < m_rows * m_columns; ++i)
@@ -191,7 +197,10 @@ template<typename T> T* ctMatrix<T>::end() { return m_data.end(); }
 template<typename T> const T* ctMatrix<T>::begin() const { return m_data.begin(); }
 template<typename T> const T* ctMatrix<T>::end() const { return m_data.end(); }
 
-template<typename T> ctMatrix<double> ctMatrix<T>::ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const { return ExtractRows(rows).ExtractColumns(columns); }
+template<typename T> ctMatrix<double> ctMatrix<T>::ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const
+{
+  return ExtractRows(rows).ExtractColumns(columns);
+}
 
 template<typename T> ctMatrix<double> ctMatrix<T>::ExtractRows(const ctVector<int64_t> &rows) const
 {
@@ -210,6 +219,9 @@ template<typename T> ctMatrix<double> ctMatrix<T>::ExtractColumns(const ctVector
       ret(r, c) = at(r, columns[c]);
   return ret;
 }
+
+template<typename T> inline ctVector<double> ctMatrix<T>::GetRow(const int64_t &row) const { return ExtractRows({ row }).m_data; }
+template<typename T> inline ctVector<double> ctMatrix<T>::GetColumn(const int64_t &column) const { return ExtractColumns({ column}).m_data; }
 
 template<typename T> ctMatrix<T> ctMatrix<T>::Sub(const T &rhs) const { return Add(-rhs); }
 template<typename T> T &ctMatrix<T>::at(const int64_t row, const int64_t col) { return m_data[col + row * m_columns]; }

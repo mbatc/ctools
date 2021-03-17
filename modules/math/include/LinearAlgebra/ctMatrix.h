@@ -35,6 +35,7 @@ template <typename T> class ctMatrix
 public:
   ctMatrix(int64_t _col = 0, int64_t _row = 0, const T &initialValue = T(0));
   ctMatrix(int64_t _col, int64_t _row, const std::initializer_list<T> &list);
+  ctMatrix(int64_t _col, int64_t _row, const ctVector<T> &list);
   ctMatrix(const ctMatrix<T> &copy);
   ctMatrix(ctMatrix<T> &&move);
   template <typename T2> ctMatrix(const ctMatrix<T2> &copy);
@@ -95,6 +96,8 @@ public:
   ctMatrix<double> ExtractMatrix(const ctVector<int64_t> &rows, const ctVector<int64_t> &columns) const;
   ctMatrix<double> ExtractRows(const ctVector<int64_t> &rows) const;
   ctMatrix<double> ExtractColumns(const ctVector<int64_t> &columns) const;
+  ctVector<double> GetRow(const int64_t &row) const;
+  ctVector<double> GetColumn(const int64_t &column) const;
 
   ctVector<T> m_data;
   int64_t m_rows;

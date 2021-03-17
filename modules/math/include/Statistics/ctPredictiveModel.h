@@ -5,6 +5,8 @@
 
 // Predictive Model interface
 
+class ctObjectDescriptor;
+
 class ctPredictiveModel
 {
 public:
@@ -15,6 +17,9 @@ public:
 
   virtual int64_t InputCount() const = 0;
   virtual int64_t OutputCount() const = 0;
+
+  virtual bool Serialize(ctObjectDescriptor *pSerialized);
+  virtual bool Deserialize(const ctObjectDescriptor *pSerialized);
 
   ctMatrix<double> PredictBatch(const ctMatrix<double> &input);
   ctVector<ctVector<double>> PredictBatch(const ctVector<ctVector<double>> &input);

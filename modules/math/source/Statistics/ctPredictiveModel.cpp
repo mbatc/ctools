@@ -53,3 +53,15 @@ bool ctPredictiveModel::TrainBatch(const ctMatrix<double> &input, const ctMatrix
 
   return Train(inVec, outVec);
 }
+
+bool ctPredictiveModel::Serialize(ctObjectDescriptor *pSerialized)
+{
+  ctUnused(pSerialized);
+  return false;
+}
+
+bool ctPredictiveModel::Deserialize(const ctObjectDescriptor *pSerialized)
+{
+  ctUnused(pSerialized);
+  return false;
+}
