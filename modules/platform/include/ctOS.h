@@ -1,5 +1,5 @@
-#ifndef ctPAL_h__
-#define ctPAL_h__
+#ifndef ctOS_h__
+#define ctOS_h__
 
 #include "file/ctFileCommon.h"
 #include "ctStreamSeekable.h"
@@ -32,4 +32,4 @@ public:
   };
 };
 
-#endif // ctPAL_h__
+#endif // ctOS_h__
