@@ -256,7 +256,7 @@ inline ctMatrix4<T> ctMatrix4<T>::Projection(const T aspect, const T FOV, const 
 {
   const T A = (clipSpaceFarZ * farPlane - clipSpaceNearZ * nearPlane) / (nearPlane - farPlane);
   const T B = (clipSpaceFarZ - clipSpaceNearZ) * farPlane * nearPlane / (nearPlane - farPlane);
-  const T yScale = 1.0 / atTan(FOV / 2);
+  const T yScale = 1.0 / ctTan(FOV / 2);
   return
 
     ctMatrix4<T>(
@@ -285,8 +285,8 @@ inline ctMatrix4<T> ctMatrix4<T>::Ortho(const T left, const T right, const T top
 template<typename T>
 inline ctMatrix4<T> ctMatrix4<T>::RotationX(const T rads)
 {
-  const T c = atCos(rads);
-  const T s = atSin(rads);
+  const T c = ctCos(rads);
+  const T s = ctSin(rads);
   return
     ctMatrix4<T>(
       1, 0, 0, 0,
@@ -299,8 +299,8 @@ inline ctMatrix4<T> ctMatrix4<T>::RotationX(const T rads)
 template<typename T>
 inline ctMatrix4<T> ctMatrix4<T>::RotationY(const T rads)
 {
-  const T c = atCos(rads);
-  const T s = atSin(rads);
+  const T c = ctCos(rads);
+  const T s = ctSin(rads);
   return
     ctMatrix4<T>(
       c, 0, s, 0,
@@ -313,8 +313,8 @@ inline ctMatrix4<T> ctMatrix4<T>::RotationY(const T rads)
 template<typename T>
 inline ctMatrix4<T> ctMatrix4<T>::RotationZ(const T rads)
 {
-  const T c = atCos(rads);
-  const T s = atSin(rads);
+  const T c = ctCos(rads);
+  const T s = ctSin(rads);
   return
     ctMatrix4<T>(
       c, -s, 0, 0,
@@ -327,13 +327,13 @@ inline ctMatrix4<T> ctMatrix4<T>::RotationZ(const T rads)
 template<typename T>
 inline ctMatrix4<T> ctMatrix4<T>::Rotation(const ctVector3<T> &axis, T rads)
 {
-  T c = atCos(rads);
-  T s = atSin(rads);
+  T c = ctCos(rads);
+  T s = ctSin(rads);
   return
     ctMatrix4<T>(
-      c + atSquare(axis.x) * (1 - c), axis.x * axis.y * (1 - c) - axis.z * s, axis.x * axis.z * (1 - c) + axis.y * s, 0,
-      axis.y * axis.x * (1 - c) + axis.z * s, c + atSquare(axis.y) * (1 - c), axis.y * axis.z * (1 - c) - axis.x * s, 0,
-      axis.z * axis.x * (1 - c) - axis.y * s, axis.z * axis.y * (1 - c) + axis.x * s, c + atSquare(axis.z) * (1 - c), 0,
+      c + ctSquare(axis.x) * (1 - c), axis.x * axis.y * (1 - c) - axis.z * s, axis.x * axis.z * (1 - c) + axis.y * s, 0,
+      axis.y * axis.x * (1 - c) + axis.z * s, c + ctSquare(axis.y) * (1 - c), axis.y * axis.z * (1 - c) - axis.x * s, 0,
+      axis.z * axis.x * (1 - c) - axis.y * s, axis.z * axis.y * (1 - c) + axis.x * s, c + ctSquare(axis.z) * (1 - c), 0,
       0, 0, 0, 1
       );
 }
@@ -343,7 +343,7 @@ inline ctMatrix4<T> ctMatrix4<T>::Rotation(const ctQuaternion<T> &quat)
 {
   const ctQuaternion<T> &q = quat; // for shorter notation
   const T d = q.Length();
-  if (d < atLimitsSmallest<T>())
+  if (d < ctLimitsSmallest<T>())
     return ctMatrix4<T>::Identity();
 
   T s = T(2) / d;
