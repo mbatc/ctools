@@ -94,7 +94,7 @@ ctString ctFile::ReadText(bool *pResult)
     return "";
 
   ctVector<char> data(m_info.Size(), 0);
-  Read(data.data(), data.size());
+  Read(data .data(), data.size());
   if (pResult) *pResult = true;
   return data.data();
 }
@@ -108,6 +108,23 @@ ctString ctFile::ReadText(const ctFilename &filename, bool *pResult)
   if (file.Open(filename, atFM_Read))
     ret = file.ReadText(pResult);
   return ret;
+}
+
+ctVector<uint8_t> ctFile::ReadFile(const ctFilename &filename, bool *pResult)
+{
+  if (pResult) *pResult = false;
+
+  ctVector<uint8_t> data;
+  ctFile file(filename, atFM_ReadBinary);
+  if (!file.IsOpen())
+    return {};
+
+  data.resize(file.m_info.Size());
+  bool success = file.Read(data.data(), data.size()) == data.size();
+  if (pResult)
+    *pResult = success;
+
+  return data;
 }
 
 int64_t ctFile::WriteFile(const ctFilename &filename, const void *pData, const int64_t &len)

@@ -48,7 +48,10 @@ int64_t ctOS::File::Tell(const ctFileHandle &handle)
 
 int64_t ctOS::File::Read(const ctFileHandle &handle, void *pDst, const int64_t &size)
 {
-  return handle && pDst && size > 0 ? fread(pDst, 1, size, (FILE*)handle) : 0;
+  int64_t bytesRead = 0;
+  if (handle != nullptr && pDst != nullptr && size > 0)
+    bytesRead = fread(pDst, 1, (size_t)size, (FILE *)handle);
+  return bytesRead;
 }
 
 int64_t ctOS::File::Write(const ctFileHandle &handle, const void *pSrc, const int64_t &size)

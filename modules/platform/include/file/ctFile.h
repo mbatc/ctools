@@ -65,6 +65,7 @@ public:
 
   ctString ReadText(bool *pResult = nullptr);
   static ctString ReadText(const ctFilename &filename, bool *pResult = nullptr);
+  static ctVector<uint8_t> ReadFile(const ctFilename &filename, bool *pResult = nullptr);
 
   static int64_t WriteFile(const ctFilename &filename, const void *pData, const int64_t &len);
   static int64_t WriteTextFile(const ctFilename &filename, const ctString &content);
