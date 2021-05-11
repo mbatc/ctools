@@ -256,7 +256,7 @@ inline ctMatrix4<T> ctMatrix4<T>::Projection(const T aspect, const T FOV, const 
 {
   const T A = (clipSpaceFarZ * farPlane - clipSpaceNearZ * nearPlane) / (nearPlane - farPlane);
   const T B = (clipSpaceFarZ - clipSpaceNearZ) * farPlane * nearPlane / (nearPlane - farPlane);
-  const T yScale = 1.0 / ctTan(FOV / 2);
+  const T yScale = T(1) / ctTan(FOV / 2);
   return
 
     ctMatrix4<T>(
