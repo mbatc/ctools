@@ -268,7 +268,10 @@ inline ctMatrix4<T> ctMatrix4<T>::Projection(const T aspect, const T FOV, const 
 }
 
 template<typename T>
-inline ctMatrix4<T> ctMatrix4<T>::Ortho(const T width, const T height, const T nearPlane, const T farPlane) { return atMatrixOrtho<T>((T)0, width, (T)0, height, nearPlane, farPlane); }
+inline ctMatrix4<T> ctMatrix4<T>::Ortho(const T width, const T height, const T nearPlane, const T farPlane)
+{
+  return Ortho((T)0, width, (T)0, height, nearPlane, farPlane);
+}
 
 template<typename T>
 inline ctMatrix4<T> ctMatrix4<T>::Ortho(const T left, const T right, const T top, const T bottom, const T nearPlane, const T farPlane)
