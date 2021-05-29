@@ -254,6 +254,16 @@ template<typename Key, class Value> void ctHashMap<Key, Value>::Add(KVP &&kvp)
   ctAssert(addSuccess, "Duplicate Key!");
 }
 
+template<typename Key, class Value>
+void ctHashMap<Key, Value>::AddOrSet(const KVP& key, const Value& value)
+{
+  Value * pValue = TryGet(key);
+  if (pValue)
+    *pValue = value;
+  else
+    Add(key, value);
+}
+
 template<typename Key, class Value> bool ctHashMap<Key, Value>::TryAdd(const Key &key, const Value &val) { return TryAdd(KVP(key, val)); }
 template<typename Key, class Value> bool ctHashMap<Key, Value>::TryAdd(const Key &key, Value &&val) { return TryAdd(KVP(key, std::move(val))); }
 template<typename Key, class Value> bool ctHashMap<Key, Value>::TryAdd(const Key &key) { return TryAdd(key, Value()); }

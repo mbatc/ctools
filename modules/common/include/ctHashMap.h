@@ -92,6 +92,8 @@ public:
   void Add(const KVP &kvp);
   void Add(KVP &&kvp);
 
+  void AddOrSet(const KVP &key, const Value &value);
+
   bool TryAdd(const Key &key, Value &&val);
   bool TryAdd(const Key &key);
   bool TryAdd(const Key &key, const Value &val);
