@@ -427,9 +427,9 @@ template<typename T>
 inline ctVector3<T> ctMatrix4<T>::GetScale() const
 {
   return ctVector3<T>(
-    ctVector3<T>(m[0], m[4], m[12]).Mag(),
-    ctVector3<T>(m[1], m[5], m[13]).Mag(),
-    ctVector3<T>(m[2], m[6], m[14]).Mag());
+    ctVector3<T>(m[0], m[4], m[8]).Mag(),
+    ctVector3<T>(m[1], m[5], m[9]).Mag(),
+    ctVector3<T>(m[2], m[6], m[10]).Mag());
 }
 
 template<typename T>
@@ -440,7 +440,7 @@ inline ctQuaternion<T> ctMatrix4<T>::GetOrientation() const
   T z = T{0};
   T w = T{0};
   T trace = m[0] + m[5] + m[10];
-  if (trace > tmlLimitsSmallest<T>())
+  if (trace > ctLimitsSmallest<T>())
   {
     T s = T(0.5) / ctSqrt(trace + T(1));
     w = T(0.25) / s;
@@ -476,7 +476,7 @@ inline ctQuaternion<T> ctMatrix4<T>::GetOrientation() const
     }
   }
 
-  return ctQuaternion(x, y, z, w);
+  return ctQuaternion<T>(x, y, z, w);
 }
 
 template<typename T>
