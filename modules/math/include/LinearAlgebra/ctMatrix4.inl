@@ -39,6 +39,14 @@ inline ctMatrix4<T>::ctMatrix4(ctMatrix4<T> &&move)
 }
 
 template<typename T>
+template<typename T2>
+ctMatrix4<T>::ctMatrix4(const ctMatrix4<T2>& copy)
+{
+  for (int64_t i = 0; i < 16; ++i)
+    m[i] = (T)copy.m[i];
+}
+
+template<typename T>
 inline ctMatrix4<T> ctMatrix4<T>::Identity()
 {
   return ctMatrix4<T>(

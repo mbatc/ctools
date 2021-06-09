@@ -19,7 +19,8 @@ public:
   ctMatrix4(ctMatrix4<T> &&move);
   ctMatrix4(const ctMatrix4<T> &copy);
 
-  template<typename T2> ctMatrix4(const ctMatrix4<T2> &copy);
+  template<typename T2>
+  ctMatrix4(const ctMatrix4<T2> &copy);
 
   ctMatrix4<T> Transpose() const;
   ctMatrix4<T> Cofactors() const;
