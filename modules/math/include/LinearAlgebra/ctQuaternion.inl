@@ -181,7 +181,7 @@ inline ctVector3<T> ctQuaternion<T>::EulerAngles(const ctQuaternion<T> &quat)
   // pitch (y-axis rotation)
   double sinp = +2.0 * (quat.w * quat.y - quat.z * quat.x);
   if (fabs(sinp) >= 1)
-    euler.x = copysign(atPi_2, sinp); // use 90 degrees if out of range
+    euler.x = copysign(ctPi_2, sinp); // use 90 degrees if out of range
   else
     euler.x = ctASin(sinp);
 
@@ -198,12 +198,12 @@ inline ctQuaternion<T> ctQuaternion<T>::Slerp(const ctQuaternion<T> &to, const T
   ctQuaternion<T> result = *this;
 
   T mag = ctSqrt(Length() * to.Length());
-  if (mag > tmlLimitsSmallest<T>())
+  if (mag > ctLimitsSmallest<T>())
   {
     const T product = Dot(to) / mag;
     const T absProduct = abs(product);
 
-    if (absProduct < T(1) - tmlLimitsSmallest<T>())
+    if (absProduct < T(1) - ctLimitsSmallest<T>())
     {
       const T theta = ctACos(absProduct);
       const T d = ctSin(theta);
