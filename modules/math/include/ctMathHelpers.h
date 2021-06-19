@@ -18,10 +18,10 @@
 #define ctSqrtPi 1.12837916709551257390    // 2/sqrt(pi)
 #define ctSqrt2 1.41421356237309504880     // sqrt(2)
 #define ctSqrt1_2 0.707106781186547524401  // 1/sqrt(2)
-#define ctDegs2Rads(x) ((double)x * 0.017453292519943295769)
-#define ctRads2Degs(x) ((double)x * 57.29577951308232087679)
-#define ctDegs2Radsf(x) ((float)x * 0.017453292519943295769f)
-#define ctRads2Degsf(x) ((float)x * 57.29577951308232087679f)
+#define ctDegs2Rads(x) (x * 0.017453292519943295769)
+#define ctRads2Degs(x) (x * 57.29577951308232087679)
+#define ctDegs2Radsf(x) (x * 0.017453292519943295769f)
+#define ctRads2Degsf(x) (x * 57.29577951308232087679f)
 
 template<typename T> inline T ctSquare(const T &x);
 template<typename T> inline T ctSin(const T &rads);
