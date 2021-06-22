@@ -2,7 +2,7 @@
 
 template<typename T> inline T ctATan2(const T &y, const T &x)
 {
-  if (x == y == 0) return 0;
+  if (x == 0 && y == 0) return 0;
   const double rad = sqrt(x * x + y * y);
   return 2 * ctATan(x <= 0 ? (rad - x) / y : y / (rad + y));
 }
