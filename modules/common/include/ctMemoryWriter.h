@@ -44,6 +44,7 @@ public:
   template<typename T> int64_t Write(const T &data);
   template<typename T> int64_t Write(const T *pData, const int64_t count);
 
+  int64_t Length() const override;
 
   bool operator!=(const ctMemoryWriter &rhs);
   bool operator==(const ctMemoryWriter &rhs);

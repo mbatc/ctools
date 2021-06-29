@@ -35,6 +35,7 @@ class ctReadStream : public ctStreamSeekable
 public:
   // Read data into pBuffer. 
   // Returns the number of bytes read
+  virtual int64_t Peek(void *pBuffer, const int64_t size);
   virtual int64_t Read(void *pBuffer, const int64_t size) = 0;
   template<typename T> int64_t Read(T *pBuffer, const int64_t count = 1);
 };

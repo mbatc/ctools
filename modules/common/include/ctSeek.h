@@ -40,7 +40,7 @@ class ctStringSeeker
 {
 public:
   // Create a seek-able string
-  ctStringSeeker(const ctString &text);
+  ctStringSeeker(ctString const *pText);
 
   // Manually seek 
   bool Seek(int64_t pos = 0, const ctSeekOrigin &origin = atSO_Current);
@@ -89,7 +89,7 @@ public:
 
 protected:
   bool DoSeek(const bool &success);
-  ctString m_text;
+  ctString const * m_pStr;
   const char *m_pText;
   const char *m_pLast;
   const char *m_pLastLast;

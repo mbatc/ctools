@@ -37,6 +37,19 @@ int64_t ctStreamSeekable::Tell() const
   ctAssert(false, "Tell operation not supported.");
   return 0;
 }
+// Returns the length of the stream
+int64_t ctStreamSeekable::Length() const
+{
+  ctAssert(false, "Length operation not supported");
+  return 0;
+}
+
+// Returns the number of bytes available to read
+int64_t ctStreamSeekable::Available() const
+{
+  ctAssert(false, "Available operation not supported");
+  return 0;
+}
 
 bool ctStreamSeekable::SeekToStart() { return Seek(0, atSO_Start); }
 bool ctStreamSeekable::SeekToEnd() { return Seek(0, atSO_End); }

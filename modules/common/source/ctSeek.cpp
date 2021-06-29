@@ -33,10 +33,10 @@ bool ctSeek::Skip(const char **ppText, const char *charList) { return _Seek(ppTe
 bool ctSeek::SkipWhitespace(const char **ppText) { return _Seek(ppText, ctString::_find_first_not(*ppText, ctString::Whitespace())); }
 bool ctSeek::SeekToWhitespace(const char **ppText) { return _Seek(ppText, ctString::_find_first_of(*ppText, ctString::Whitespace())); }
 
-ctStringSeeker::ctStringSeeker(const ctString &text)
+ctStringSeeker::ctStringSeeker(ctString const * pStr)
+  : m_pStr(pStr)
 {
-  m_text = text;
-  m_pText = m_pLast = m_pLastLast = m_text.c_str();
+  m_pText = m_pLast = m_pLastLast = m_pStr->c_str();
 }
 
 bool ctStringSeeker::Seek(int64_t pos, const ctSeekOrigin &origin)
@@ -48,32 +48,32 @@ bool ctStringSeeker::Seek(int64_t pos, const ctSeekOrigin &origin)
   case atSO_Current:
     break;
   case atSO_Start:
-    m_pText = m_text.begin();
+    m_pText = m_pStr->begin();
     break;
   case atSO_End:
-    m_pText = m_text.end();
+    m_pText = m_pStr->end();
     pos = -pos;
     break;
   }
 
   m_pText += pos;
 
-  bool result = m_pText < m_text.begin() || m_pText > m_text.end();
-  m_pText = ctClamp(m_pText, m_text.begin(), m_text.end());
+  bool result = m_pText < m_pStr->begin() || m_pText > m_pStr->end();
+  m_pText = ctClamp(m_pText, m_pStr->begin(), m_pStr->end());
   m_pLast = m_pText;
   return result;
 }
 
-int64_t ctStringSeeker::Length() const { return m_text.length(); }
+int64_t ctStringSeeker::Length() const { return m_pStr->length(); }
 const char* ctStringSeeker::Text() const { return m_pText; }
 const char* ctStringSeeker::LastText() const { return m_pLastLast; }
-const char* ctStringSeeker::begin() const { return m_text.begin(); }
-const char* ctStringSeeker::end() const { return m_text.end(); }
+const char* ctStringSeeker::begin() const { return m_pStr->begin(); }
+const char* ctStringSeeker::end() const { return m_pStr->end(); }
 
 ctString ctStringSeeker::GetString(const int64_t &endIdx, const int64_t &startIdx)
 {
   const char *startPos = startIdx == CT_INVALID_INDEX ? m_pText : (m_pText + startIdx);
-  const char *endPos = endIdx == CT_INVALID_INDEX ?  m_text.end() : (m_pText + endIdx);
+  const char *endPos = endIdx == CT_INVALID_INDEX ? m_pStr->end() : (m_pText + endIdx);
   return ctString(ctClamp(startPos, begin(), end()), ctClamp(endPos, begin(), end()));
 }
 

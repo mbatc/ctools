@@ -82,6 +82,16 @@ int64_t ctFile::Tell() const
   return ctOS::File::Tell(m_handle);
 }
 
+int64_t ctFile::Length() const
+{
+    return Info().Size();
+}
+
+int64_t ctFile::Available() const
+{
+  return Length() - Tell();
+}
+
 int64_t ctFile::Write(const void *pData, const int64_t len)
 {
   return ctOS::File::Write(m_handle, pData, len);
@@ -185,7 +195,7 @@ int64_t ctFile::WriteText(const ctString &text) { return Write(text.c_str(), tex
 bool ctFile::Create(const ctFilename &fn) { return ctFile(fn, atFM_Append).IsOpen(); }
 bool ctFile::Copy(const ctFilename &fn) { ctUnused(fn); return false; }
 bool ctFile::Move(const ctFilename &fn) { ctUnused(fn); return false; }
-const ctFileInfo& ctFile::Info() { return m_info; }
-int64_t ctFile::GetMode() { return m_mode; }
+const ctFileInfo& ctFile::Info() const { return m_info; }
+int64_t ctFile::GetMode() const { return m_mode; }
 bool ctFile::IsOpen() const { return m_handle && m_mode != atFM_None; }
 bool ctFile::Delete(const ctFilename &fn) { return remove(fn.Path().c_str()) == 0; }

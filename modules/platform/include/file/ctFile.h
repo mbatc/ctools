@@ -57,6 +57,10 @@ public:
   // Returns the current position in the file
   int64_t Tell() const override;
 
+  int64_t Length() const override;
+
+  int64_t Available() const override;
+
   // Writes pData to the file
   int64_t Write(const void *pData, const int64_t len) override;
 
@@ -76,9 +80,9 @@ public:
   // Returns the number of bytes read
   int64_t Read(void *pBuffer, const int64_t size);
 
-  const ctFileInfo &Info();
+  const ctFileInfo &Info() const;
 
-  int64_t GetMode();
+  int64_t GetMode() const;
   bool IsOpen() const;
 
   template<typename T> int64_t Read(T *pData, const int64_t count = 1);

@@ -58,5 +58,10 @@ bool ctMemoryWriter::Seek(const int64_t offset, const ctSeekOrigin origin)
   return true;
 }
 
+int64_t ctMemoryWriter::Length() const
+{
+  return m_data.size();
+}
+
 bool ctMemoryWriter::operator!=(const ctMemoryWriter &rhs) { return !(*this == rhs); }
 bool ctMemoryWriter::operator==(const ctMemoryWriter &rhs) { return rhs.m_data.size() == m_data.size() && memcmp(rhs.m_data.data(), m_data.data(), (size_t)m_data.size()) == 0; }

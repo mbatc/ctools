@@ -109,6 +109,8 @@ public:
   static int64_t _find_last(const char *str, const char* find);
   static bool _starts_with(const char *str, const char *find);
   static bool _starts_with(const char *str, const char _char);
+  static bool _ends_with(const char *str, const char *find);
+  static bool _ends_with(const char *str, const char _char);
 
   //***************
   // Find functions
@@ -133,6 +135,8 @@ public:
   int64_t find_last(const char _char) const;
   int64_t find_last(const char *str) const;
   bool starts_with(const char *str) const;
+  bool ends_with(const char *str) const;
+  bool ends_with(const char str) const;
 
   ctString trim(const char *characters = ctString::Whitespace()) const;
   ctString trim_start(const char *characters = ctString::Whitespace()) const;

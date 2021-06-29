@@ -39,7 +39,7 @@ bool ctXML::Parse(const ctString &xml)
   // Strip XML comments
   ctString strippedXml;
   {
-    ctStringSeeker seeker(xml);
+    ctStringSeeker seeker(&xml);
     bool addEnd = true;
     const char *lastPos = seeker.Text();
     while (seeker.SeekTo("<!--"))
@@ -63,7 +63,7 @@ bool ctXML::Parse(const ctString &xml)
     return false;
 
   { // Build XML elements
-    ctStringSeeker seeker(strippedXml);
+    ctStringSeeker seeker(&strippedXml);
     ctXML child;
     ctString endTag;
     ctVector<ctString> tags;
@@ -121,7 +121,7 @@ static ctString _FormatContent(const ctString &text)
   bool first = true;
   bool startsWithWhitespace = false;
 
-  ctStringSeeker seeker(text);
+  ctStringSeeker seeker(&text);
 
   while (seeker.SkipWhitespace())
   {

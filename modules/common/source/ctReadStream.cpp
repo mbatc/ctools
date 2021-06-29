@@ -30,3 +30,11 @@ int64_t ctStreamRead(ctReadStream *pStream, void *pData, const int64_t size)
 {
   return pStream->Read(pData, size);
 }
+
+int64_t ctReadStream::Peek(void *pBuffer, const int64_t size)
+{
+  int64_t location = Tell();
+  int64_t len = Read(pBuffer, size);
+  Seek(location);
+  return len;
+}

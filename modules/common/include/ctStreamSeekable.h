@@ -45,6 +45,12 @@ public:
   // Returns the current position in the stream
   virtual int64_t Tell() const;
 
+  // Returns the length of the stream
+  virtual int64_t Length() const;
+
+  // Returns the number of bytes available to read
+  virtual int64_t Available() const;
+
   bool SeekToStart();
   bool SeekToEnd();
 };

@@ -519,3 +519,21 @@ bool ctString::_starts_with(const char *str, const char *find)
 }
 
 bool ctString::_starts_with(const char *str, const char _char) { return str[0] == _char; }
+
+bool ctString::ends_with(const char *str) const
+{
+  int64_t len = strlen(str);
+  if (length() < len)
+    return false;
+
+  char const * start = end() - len;
+  for (int64_t i = 0; i < len; ++i) {
+    if (start[i] != str[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool ctString::ends_with(const char str) const { return length() > 0 && m_data[m_data.size() - 1] == str; }
