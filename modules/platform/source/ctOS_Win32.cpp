@@ -22,7 +22,7 @@ bool ctOS::File::Flush(const ctFileHandle &handle)
   return handle && fflush((FILE*)handle) == 0;
 }
 
-bool ctOS::File::Seek(const ctFileHandle &handle, const int64_t &loc, const ctSeekOrigin &origin)
+bool ctOS::File::Seek(const ctFileHandle &handle, const int64_t &loc, const ctSeekOrigin &origin, int64_t *pNewPosition)
 {
   if (!handle)
     return false;
@@ -38,6 +38,10 @@ bool ctOS::File::Seek(const ctFileHandle &handle, const int64_t &loc, const ctSe
   }
 
   fseek((FILE*)handle, (long)loc, (int)sysOrigin);
+  
+  if (pNewPosition)
+    *pNewPosition = Tell(handle);
+
   return true;
 }
 

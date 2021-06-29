@@ -31,8 +31,12 @@ public:
   ctReadStream const * GetStream() const;
 
 private:
+  void TryReadBuffer();
+
   ctString m_lastToken;
   ctReadStream * m_pStream = nullptr;
+  ctVector<char> m_buffer;
+  int64_t m_offset = 0;
 };
 
 #endif // ctStringReader_h__

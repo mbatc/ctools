@@ -20,7 +20,7 @@ public:
     static void Close(const ctFileHandle &handle);
 
     static bool Flush(const ctFileHandle &handle);
-    static bool Seek(const ctFileHandle &handle, const int64_t &loc, const ctSeekOrigin &origin);
+    static bool Seek(const ctFileHandle &handle, const int64_t &loc, const ctSeekOrigin &origin, int64_t* pNewPosition);
     static int64_t Tell(const ctFileHandle &handle);
 
     static int64_t Read(const ctFileHandle &handle, void *pDst, const int64_t &size);

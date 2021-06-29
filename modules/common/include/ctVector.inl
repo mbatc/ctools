@@ -157,11 +157,6 @@ inline void ctVector<T>::reserve(const int64_t capacity)
     return; // no need to realloc
   if (try_realloc(capacity))
     return; // [capacity] is > [m_size] so realloc succeeded
-
-  // [capacity] is < [m_size] so resize the vector before realloc
-  bool shrinkSucceeded = shrink_by(m_size - capacity);
-  ctAssert(shrinkSucceeded, "Could not resize, reserve failed!");
-  try_realloc(capacity);
 }
 
 template<typename T>
@@ -287,8 +282,14 @@ template<typename T>
 inline void ctVector<T>::move_item(const int64_t from, const int64_t to)
 {
   const int64_t dir = from < to ? 1 : -1;
-  for (int64_t i = from; i != to; i += dir)
-    std::swap(at(i), at(i + dir));
+  int64_t next = 0;
+  for (int64_t i = from; i != to; i = next)
+  {
+    next = i + dir;
+    T temp = m_pData[i];
+    m_pData[i] = m_pData[next];
+    m_pData[next] = temp;
+  }
 }
 
 template<typename T>

@@ -97,9 +97,9 @@ public:
   static bool Move(const ctFilename &fn);
 
 protected:
-  ctFileHandle m_handle;
-  int64_t m_mode;
-  int64_t m_pos;
+  ctFileHandle m_handle = 0;
+  int64_t m_mode = 0;
+  int64_t m_pos = 0;
   ctFilename m_fn;
   ctFileInfo m_info;
 };

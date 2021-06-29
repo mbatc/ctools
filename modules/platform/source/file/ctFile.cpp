@@ -74,12 +74,12 @@ bool ctFile::Close()
 
 bool ctFile::Seek(const int64_t loc, const ctSeekOrigin origin)
 {
-  return ctOS::File::Seek(m_handle, loc, origin);
+  return ctOS::File::Seek(m_handle, loc, origin, &m_pos);
 }
 
 int64_t ctFile::Tell() const
 {
-  return ctOS::File::Tell(m_handle);
+  return m_pos;
 }
 
 int64_t ctFile::Length() const
@@ -94,24 +94,30 @@ int64_t ctFile::Available() const
 
 int64_t ctFile::Write(const void *pData, const int64_t len)
 {
-  return ctOS::File::Write(m_handle, pData, len);
+  int64_t amountWritten = ctOS::File::Write(m_handle, pData, len);
+  m_pos += amountWritten;
+  return amountWritten;
 }
 
 ctString ctFile::ReadText(bool *pResult)
 {
-  if (pResult) *pResult = false;
+  if (pResult)
+    *pResult = false;
+
   if (!IsOpen() || m_info.Size() == 0)
     return "";
 
   ctVector<char> data(m_info.Size(), 0);
   Read(data .data(), data.size());
-  if (pResult) *pResult = true;
+  if (pResult)
+    *pResult = true;
   return data.data();
 }
 
 ctString ctFile::ReadText(const ctFilename &filename, bool *pResult)
 {
-  if (pResult) *pResult = false;
+  if (pResult)
+    *pResult = false;
 
   ctFile file;
   ctString ret;
@@ -122,7 +128,8 @@ ctString ctFile::ReadText(const ctFilename &filename, bool *pResult)
 
 ctVector<uint8_t> ctFile::ReadFile(const ctFilename &filename, bool *pResult)
 {
-  if (pResult) *pResult = false;
+  if (pResult)
+    *pResult = false;
 
   ctVector<uint8_t> data;
   ctFile file(filename, atFM_ReadBinary);
@@ -157,7 +164,9 @@ bool ctFile::Flush()
 
 int64_t ctFile::Read(void *pBuffer, const int64_t size)
 {
-  return ctOS::File::Read(m_handle, pBuffer, size);
+  int64_t amountRead = ctOS::File::Read(m_handle, pBuffer, size);
+  m_pos += amountRead;
+  return amountRead;
 }
 
 ctFilename ctFile::Find(const ctFilename &fn, bool *pResult)

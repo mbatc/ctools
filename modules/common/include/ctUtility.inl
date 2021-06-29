@@ -18,6 +18,9 @@ template<typename T, typename T2, typename T3> inline T ctClamp(const T &val, co
 
 template<typename T> int64_t ctIndexOf(const T *pBegin, const T *pEnd, const T &find)
 {
+  if (pBegin == nullptr || pEnd == nullptr)
+    return -1;
+
   const T *pVal = pBegin;
   while (*pVal != find)
   {

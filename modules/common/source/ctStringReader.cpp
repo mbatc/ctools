@@ -1,5 +1,7 @@
 #include "ctStringReader.h"
 
+static int64_t _bufferSize = 1024 * 1024ll;
+
 ctStringReader::ctStringReader(ctReadStream *pStream)
   : m_pStream(pStream)
 {}
@@ -11,16 +13,16 @@ int64_t ctStringReader::Available() const
 
 char ctStringReader::Peek()
 {
-  char c;
-  m_pStream->Peek(&c, 1);
-  return c;
+  TryReadBuffer();
+
+  return m_buffer[m_offset];
 }
 
 char ctStringReader::Read()
 {
-  char c;
-  m_pStream->Read(&c, 1);
-  return c;
+  TryReadBuffer();
+
+  return m_buffer[m_offset++];
 }
 
 int64_t ctStringReader::Read(char *pBuffer, int64_t count)
@@ -51,7 +53,7 @@ ctString const & ctStringReader::ReadUntil(const ctString &set)
   m_lastToken = "";
   char c = Read();
   while (c != 0 && set.find(c) == CT_INVALID_INDEX) {
-    m_lastToken += c;
+    m_lastToken.append(c);
     c = Read();
   }
 
@@ -75,4 +77,14 @@ ctReadStream * ctStringReader::GetStream()
 ctReadStream const * ctStringReader::GetStream() const
 {
   return m_pStream;
+}
+
+void ctStringReader::TryReadBuffer()
+{
+  if (m_offset < m_buffer.size())
+    return;
+
+  m_buffer.resize(_bufferSize);
+  m_buffer.resize(m_pStream->Read(m_buffer.data(), m_buffer.size()));
+  m_offset = 0;
 }
