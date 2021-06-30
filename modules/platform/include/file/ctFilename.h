@@ -40,8 +40,8 @@ public:
   
   ctString Path(const bool withExtension = true) const;
   ctString Name(const bool withExtension = true) const;
-  ctString Extension() const;
-  ctString Directory() const;
+  const ctString& Extension() const;
+  const ctString& Directory() const;
 
   ctFilename ResolveFullPath() const;
   static ctFilename ResolveFullPath(const ctFilename &path);

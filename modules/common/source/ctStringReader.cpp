@@ -8,7 +8,7 @@ ctStringReader::ctStringReader(ctReadStream *pStream)
 
 int64_t ctStringReader::Available() const
 {
-  return m_pStream->Available();
+  return m_pStream->Available() + m_buffer.size() - m_offset;
 }
 
 char ctStringReader::Peek()

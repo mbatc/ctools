@@ -117,8 +117,8 @@ ctFilename::ctFilename(const ctString &path) { assign(path); }
 ctFilename::ctFilename(const ctFilename &copy) { assign(copy.m_fullpath); }
 ctString ctFilename::Path(const bool withExtension) const { return withExtension ? m_fullpath : m_directory + "/" + m_name; }
 ctString ctFilename::Name(const bool withExtension) const { return withExtension && m_extension.length() > 0 ? m_name + "." + m_extension : m_name; }
-ctString ctFilename::Extension() const { return m_extension; }
-ctString ctFilename::Directory() const { return m_directory; }
+const ctString& ctFilename::Extension() const { return m_extension; }
+const ctString& ctFilename::Directory() const { return m_directory; }
 ctFilename ctFilename::ResolveFullPath() const { return ResolveFullPath(*this); }
 ctFilename ctFilename::ResolveRelativePath(const ctFilename &to) const { return ResolveRelativePath(to, *this); }
 
