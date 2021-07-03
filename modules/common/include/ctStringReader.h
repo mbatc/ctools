@@ -12,6 +12,8 @@ public:
 
   int64_t Available() const;
 
+  bool EndOfFile() const;
+
   char Peek();
 
   char Read();
@@ -37,6 +39,7 @@ private:
   ctReadStream * m_pStream = nullptr;
   ctVector<char> m_buffer;
   int64_t m_offset = 0;
+  bool m_eof = false;
 };
 
 #endif // ctStringReader_h__

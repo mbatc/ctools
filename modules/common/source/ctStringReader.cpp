@@ -11,17 +11,23 @@ int64_t ctStringReader::Available() const
   return m_pStream->Available() + m_buffer.size() - m_offset;
 }
 
+bool ctStringReader::EndOfFile() const
+{
+  return m_eof;
+}
+
 char ctStringReader::Peek()
 {
   TryReadBuffer();
-
+  if (m_eof) return 0;
   return m_buffer[m_offset];
 }
 
 char ctStringReader::Read()
 {
-  TryReadBuffer();
 
+  TryReadBuffer();
+  if (m_eof) return 0;
   return m_buffer[m_offset++];
 }
 
@@ -81,10 +87,11 @@ ctReadStream const * ctStringReader::GetStream() const
 
 void ctStringReader::TryReadBuffer()
 {
-  if (m_offset < m_buffer.size())
+  if (m_eof || m_offset < m_buffer.size())
     return;
 
-  m_buffer.resize(_bufferSize);
+  m_buffer.resize(ctMin(Available(), _bufferSize));
   m_buffer.resize(m_pStream->Read(m_buffer.data(), m_buffer.size()));
   m_offset = 0;
+  m_eof = m_buffer.size() == 0;
 }
