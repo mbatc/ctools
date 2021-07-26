@@ -39,28 +39,30 @@ libdirs { ctools_bin }
 
 -- Shared Defines
 
-  defines { "_CRT_SECURE_NO_WARNINGS" }
+defines { "_CRT_SECURE_NO_WARNINGS" }
 
 -- Includes
 
-  includedirs { "include" } 
-  includedirs { "../common/include" }
+includedirs { "include" } 
+includedirs { "../common/include" }
 
 -- Project Files
 
-  files { "**.cpp", "**.h", "**.inl" }
+files { "**.cpp", "**.h", "**.inl" }
 
 -- Debug Configuration Settings
 
-  filter { "configurations:Debug" }
-    defines { "DEBUG"}
-    symbols "On"
-	  editandcontinue "On"
+filter { "configurations:Debug" }
+  defines { "DEBUG"}
+  symbols "On"
+  editandcontinue "On"
 
 -- Release Configuration Settings
 
-  filter { "configurations:Release" }
-    flags { "LinkTimeOptimization" }
-    defines { "NDEBUG" }
-    optimize "On"
-	  editandcontinue "Off"
+filter { "configurations:Release" }
+  flags { "LinkTimeOptimization" }
+  defines { "NDEBUG" }
+  optimize "On"
+  editandcontinue "Off"
+
+filter {}

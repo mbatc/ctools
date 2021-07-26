@@ -55,3 +55,5 @@ linkoptions { "/ignore:4075" }
     defines { "NDEBUG" }
     optimize "On"
 	  editandcontinue "Off"
+
+  filter {}

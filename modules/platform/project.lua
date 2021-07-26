@@ -70,3 +70,5 @@ libdirs { ctools_bin }
     defines { "NDEBUG" }
     optimize "On"
 	  editandcontinue "Off"
+
+    filter {}
