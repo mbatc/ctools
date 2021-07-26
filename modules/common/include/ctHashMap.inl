@@ -255,7 +255,7 @@ template<typename Key, class Value> void ctHashMap<Key, Value>::Add(KVP &&kvp)
 }
 
 template<typename Key, class Value>
-void ctHashMap<Key, Value>::AddOrSet(const KVP& key, const Value& value)
+void ctHashMap<Key, Value>::AddOrSet(const Key& key, const Value& value)
 {
   Value * pValue = TryGet(key);
   if (pValue)
