@@ -1,4 +1,8 @@
 #include "ctPipedCommand.h"
+#include <stdio.h>
+
+#define _popen popen
+#define _pclose pclose
 
 ctVector<uint8_t> ctPipedCommand::Run(const ctString &command, const ctVector<ctString> &args)
 {

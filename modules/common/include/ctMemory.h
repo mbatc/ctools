@@ -30,7 +30,6 @@
 #include <type_traits>
 #include <forward_list>
 #include <memory>
-#include <xmemory>
 
 //*********************
 // Function Definitions
@@ -42,7 +41,7 @@
 template<typename T, typename... Args>
 inline void ctConstruct(T *pDst, Args&&... args)
 {
-  new (static_cast<void *>(&*pDst)) typename T(std::forward<Args>(args)...);
+  new (static_cast<void *>(&*pDst)) T(std::forward<Args>(args)...);
 }
 
 template<typename T>
@@ -70,7 +69,7 @@ inline void ctUninitializedFillArray(T *pDst, int64_t count, const T &value)
   else
   {
     for (; count--; ++pDst)
-      new (static_cast<void *>(&*pDst)) typename T(value);
+      new (static_cast<void *>(&*pDst)) T(value);
   }
 }
 
@@ -85,7 +84,7 @@ inline void ctUninitializedMoveArray(T *pDst, T *pSrc, int64_t count)
   else
   {
     for (; count--; ++pDst, ++pSrc)
-      new (static_cast<void *>(&*pDst)) typename T(std::move(*pSrc));
+      new (static_cast<void *>(&*pDst)) T(std::move(*pSrc));
   }
 }
 
@@ -100,7 +99,7 @@ inline void ctUninitializedCopyArray(T *pDst, const T *pSrc, int64_t count)
   else
   {
     for (; count--; ++pDst, ++pSrc)
-      new (static_cast<void *>(&*pDst)) typename T(*pSrc);
+      new (static_cast<void *>(&*pDst)) T(*pSrc);
   }
 }
 
@@ -109,7 +108,7 @@ template<typename T, typename T2>
 inline void ctUninitializedCopyArray(T *pDst, const T2 *pSrc, int64_t count)
 {
   for (; count--; ++pDst, ++pSrc)
-    new (static_cast<void *>(&*pDst)) typename T(*pSrc);
+    new (static_cast<void *>(&*pDst)) T(*pSrc);
 }
 
 // Destruct [count] items in the destination array

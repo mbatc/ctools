@@ -193,11 +193,6 @@ ctFilename ctFile::Find(const ctFilename &fn, bool *pResult)
 bool ctFile::Exists(const ctFilename &fn)
 {
   return ctOS::File::Exists(fn.c_str());
-
-#ifndef ctPLATFORM_WIN32
-  int result = access(fn.c_str(), X_OK);
-  return result == 0 || result == EACCES || result == EROFS;
-#endif
 }
 
 int64_t ctFile::WriteText(const ctString &text) { return Write(text.c_str(), text.length()); }

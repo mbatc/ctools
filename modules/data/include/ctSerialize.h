@@ -3,7 +3,7 @@
 
 #include "ctMath.h"
 #include "ctObjectDescriptor.h"
-#include "Statistics\ctBPGNetwork.h"
+#include "../../math/include/Statistics/ctBPGNetwork.h"
 
 // Built-ins
 void ctSerialize(ctObjectDescriptor *pSerialized, const bool &src);

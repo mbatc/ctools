@@ -42,7 +42,7 @@ void _ctAssert(const bool cond, const char *expression, const char *message, con
 #endif
 
 #ifdef ctPLATFORM_LINUX
-    printf("Assertion Failed: %s\nMessage: %s\n\nFile: %s, ln %lld, func '%s'", expression, message, file, line, function);
+    printf("Assertion Failed: %s\nMessage: %s\n\nFile: %s, ln %ld, func '%s'", expression, message, file, line, function);
     __builtin_trap();
 #endif
   }

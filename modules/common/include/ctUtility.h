@@ -64,7 +64,7 @@
 // OS Defines
 #if defined(_WIN32) || defined(_WIN64)
 #define ctPLATFORM_WIN32
-#elif defined _LINUX_
+#elif defined linux
 #define ctPLATFORM_LINUX
 #endif
 

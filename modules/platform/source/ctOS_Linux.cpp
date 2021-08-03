@@ -1,19 +1,23 @@
 #include "ctOS.h"
 
-#ifdef ctPLATFORM_WIN32
-#include <windows.h>
+#ifdef ctPLATFORM_LINUX
+
+#include<stdio.h>
+#include<unistd.h>
+#include<errno.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
 
 ctFileHandle ctOS::File::Open(const char *path, const ctFileMode &mode)
 {
   FILE *pFile = nullptr;
-  if (fopen_s(&pFile, path, ctFileCommon::FileMode(mode)) != 0)
-    return nullptr;
-  return pFile;
+  return fopen(path, ctFileCommon::FileMode(mode));
 }
 
 void ctOS::File::Close(const ctFileHandle &handle)
 {
-  if (handle)
+  if (handle != nullptr)
     fclose((FILE*)handle);
 }
 
@@ -65,12 +69,7 @@ int64_t ctOS::File::Write(const ctFileHandle &handle, const void *pSrc, const in
 
 bool ctOS::File::Exists(const char *path)
 {
-  bool invalid = GetFileAttributesA(path) == INVALID_FILE_ATTRIBUTES;
-  DWORD errorCode = GetLastError();
-  return !(invalid && (errorCode == ERROR_FILE_NOT_FOUND || errorCode == ERROR_PATH_NOT_FOUND ||
-    errorCode == ERROR_INVALID_NAME || errorCode == ERROR_INVALID_DRIVE ||
-    errorCode == ERROR_NOT_READY || errorCode == ERROR_INVALID_PARAMETER ||
-    errorCode == ERROR_BAD_PATHNAME || errorCode == ERROR_BAD_NETPATH));
+  return access(path, F_OK) != -1;
 }
 
 bool ctOS::File::EndOfFile(const ctFileHandle &handle)

@@ -69,7 +69,7 @@ template<typename T> void ctDeserialize(const ctObjectDescriptor &serialized, ct
 
 template<typename T> void ctDeserialize(const ctObjectDescriptor &serialized, ctMatrix4<T> *pDst)
 {
-  ctDeserialize(serialized, &src.m, ctArraySize(src.m));
+  ctDeserialize(serialized, &pDst->m, ctArraySize(pDst->m));
 }
 
 template<typename T> void ctDeserialize(const ctObjectDescriptor &serialized, ctQuaternion<T> *pDst)
@@ -131,7 +131,7 @@ template<typename T> void ctDeserialize(const ctObjectDescriptor &serialized, ct
 
 template<typename Key, typename Value> void ctDeserialize(const ctObjectDescriptor &serialized, ctHashMap<Key, Value> *pDst)
 {
-  if (serialized.GetValueType() != ctObjectDescriptor::OT_Object)
+  if (serialized.GetObjectType() != ctObjectDescriptor::OT_Object)
     return;
 
   for (const ctObjectDescriptor &member : serialized.GetMembers())

@@ -1,6 +1,7 @@
 #include "ctString.h"
 #include "ctScan.h"
 #include <codecvt>
+#include <locale>
 
 template<> std::wstring ctFromString<std::wstring>(const ctString &str) { std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter; return converter.from_bytes(str.c_str()); }
 template<> std::string ctFromString<std::string>(const ctString &str) { return str.c_str(); }

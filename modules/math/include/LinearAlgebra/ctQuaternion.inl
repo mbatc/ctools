@@ -118,7 +118,7 @@ template<typename T>
 inline T ctQuaternion<T>::AngleTo(const ctQuaternion<T> &from, const ctQuaternion<T> &to)
 {
   T s = ctSqrt(from.Length() * to.Length());
-  if (abs(s) < tmlLimitsSmallest<T>())
+  if (abs(s) < ctLimitsSmallest<T>())
     return 0;
   return 2 * ctACos(Dot(to) / s);
 }
@@ -164,7 +164,7 @@ inline ctVector3<T> ctQuaternion<T>::Axis(const ctQuaternion<T> &quat)
 {
   T s_sqr = T(1) - ctSquare(quat.w);
   T s = T(1) / ctSqrt(s_sqr);
-  if (s < tmlLimitsSmallest<T>())
+  if (s < ctLimitsSmallest<T>())
     return ctVector3<T>(1, 0, 0);
   return ctVector3<T>(quat.x * s, quat.y * s, quat.z * s);
 }

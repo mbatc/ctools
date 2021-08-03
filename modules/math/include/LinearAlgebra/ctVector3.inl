@@ -428,7 +428,7 @@ inline const T* ctVector3<T>::begin() const
 template<typename T>
 inline const T* ctVector3<T>::data() const
 {
-  return m_;
+  return m;
 }
 
 template<typename T>
