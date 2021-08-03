@@ -24,6 +24,8 @@
 // -----------------------------------------------------------------------------
 
 #include "ctScan.h"
+#include <math.h>
+#include <climits>
 
 int64_t _ScanIntegerFast(const char *str, int64_t *pLen)
 {

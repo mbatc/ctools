@@ -23,11 +23,12 @@
 // THE SOFTWARE.
 // -----------------------------------------------------------------------------
 
-#include "ctAssert.h"
 #include "networking/ctSocket.h"
+
+#ifdef ctPLATFORM_WIN32
+#include "ctAssert.h"
 #include <WS2tcpip.h>
 #include <WinSock2.h>
-
 #pragma comment(lib, "Ws2_32.lib")
 
 enum atSocketState
@@ -254,3 +255,5 @@ bool ctSocket::CanAccept() const { return IsHost() && CanRead(); }
 bool ctSocket::IsValid() const { return m_handle != INVALID_SOCKET; }
 bool ctSocket::CanWrite() const { return (_Status(m_handle, -1) & atSS_Write) > 0; }
 int64_t ctSocket::Write(const uint8_t *pData, const int64_t len) const { return IsValid() ? send(Handle(), (char*)pData, (int)len, 0) : 0; }
+
+#endif

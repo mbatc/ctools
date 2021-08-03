@@ -66,7 +66,7 @@ public:
   typename std::enable_if<std::is_void<T>::value, T>::type As();
 
   template<typename T>
-  typename const std::enable_if<!std::is_void<T>::value, T>::type& As() const;
+  const typename std::enable_if<!std::is_void<T>::value, T>::type& As() const;
 
   template<typename T>
   typename std::enable_if<std::is_void<T>::value, T>::type As() const;

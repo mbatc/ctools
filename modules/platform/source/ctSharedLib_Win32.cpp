@@ -1,5 +1,6 @@
 #include "ctSharedLib.h"
-#include <windows.h>
+
+#ifdef ctPLATFORM_WIN32
 
 ctSharedLib::ctSharedLib(const ctFilename &path)
   : m_module(ctNew(Module)(path))
@@ -43,3 +44,5 @@ ctSharedLib::NullFunc ctSharedLib::Module::LoadFunction(const ctString &name)
 {
   return IsLoaded() ? (NullFunc)GetProcAddress((HMODULE)pHandle, name.c_str()) : nullptr;
 }
+
+#endif

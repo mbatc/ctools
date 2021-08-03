@@ -1,5 +1,6 @@
 #include "ctString.h"
 #include <codecvt>
+#include <locale>
 #include "ctPrint.h"
 
 ctString ctToString(const std::wstring &str) { std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> coverter; return ctString(coverter.to_bytes(str.c_str())); }

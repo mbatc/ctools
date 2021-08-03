@@ -31,7 +31,7 @@ inline bool ctObject::Is() const
 }
 
 template<typename T>
-inline typename const std::enable_if<!std::is_void<T>::value, T>::type& ctObject::As() const
+inline const typename std::enable_if<!std::is_void<T>::value, T>::type& ctObject::As() const
 {
   return *(T*)m_data.data();
 }

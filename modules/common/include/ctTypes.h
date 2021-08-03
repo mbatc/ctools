@@ -30,9 +30,9 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <tuple>
-
+#include <cstring>
 #include "ctUtility.h"
-#include <xtr1common>
+#include <type_traits>
 
 #define CT_INVALID_ID (int64_t)-1
 #define CT_INVALID_INDEX (int64_t)-1
