@@ -81,7 +81,8 @@ public:
 
   ctHashMap(const int64_t bucketCount = 1);
   ctHashMap(const ctHashMap<Key, Value> &copy);
-  ctHashMap(ctHashMap<Key, Value> &&move);
+  ctHashMap(ctHashMap<Key, Value>&& move);
+  ctHashMap(const std::initializer_list<ctKeyValue<Key, Value>> &values);
 
   void Clear();
   int64_t Size() const;

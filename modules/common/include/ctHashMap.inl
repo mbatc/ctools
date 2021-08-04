@@ -50,6 +50,13 @@ template<typename Key, class Value> ctHashMap<Key, Value>::ctHashMap(ctHashMap<K
   move.m_buckets.resize(1);
 }
 
+template<typename Key, class Value> ctHashMap<Key, Value>::ctHashMap(const std::initializer_list<ctKeyValue<Key, Value>> &values)
+  : ctHashMap()
+{
+  for (auto& [key, value] : values)
+    TryAdd(key, value);
+}
+
 template<typename Key, class Value> bool ctHashMap<Key, Value>::TryAdd(const KVP &kvp)
 {
   Bucket &bucket = GetBucket(kvp.m_key);
