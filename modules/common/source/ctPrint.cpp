@@ -10,7 +10,7 @@ ctString ctPrint::Float(const double &val)
 ctString ctPrint::Int(const int64_t &val)
 {
   char buffer[64];
-  sprintf(buffer, "%ld", val);
+  sprintf(buffer, "%I64d", val);
   return buffer;
 }
 

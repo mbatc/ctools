@@ -1,8 +1,10 @@
 #include "ctPipedCommand.h"
 #include <stdio.h>
 
+#ifdef ctPLATFORM_LINUX
 #define _popen popen
 #define _pclose pclose
+#endif
 
 ctVector<uint8_t> ctPipedCommand::Run(const ctString &command, const ctVector<ctString> &args)
 {

@@ -1,6 +1,7 @@
 #include "ctSharedLib.h"
 
 #ifdef ctPLATFORM_WIN32
+#include <Windows.h>
 
 ctSharedLib::ctSharedLib(const ctFilename &path)
   : m_module(ctNew(Module)(path))
