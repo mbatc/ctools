@@ -20,6 +20,8 @@ public:
   ctStringValue& Set(const ctString &val);
   ctStringValue& Set(const bool &val);
 
+  ctStringValue& Parse(const ctString &value);
+
   bool IsEmpty() const;
 
   bool    AsBool() const;

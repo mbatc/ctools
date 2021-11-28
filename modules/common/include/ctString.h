@@ -186,7 +186,8 @@ public:
   const_iterator begin() const;
   const_iterator end() const;
 
-  static const char* Numerals();
+  static const char *Decimals();
+  static const char *Numerals();
   static const char* Whitespace();
   static const char* Hex();
   static const char* Binary();
