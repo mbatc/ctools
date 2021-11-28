@@ -435,9 +435,13 @@ int64_t ctString::find_first(const char *str) const { return find(str, 0); }
 int64_t ctString::find_last(const char _char) const { return find_reverse(_char); }
 int64_t ctString::find_last(const char *str) const { return find_reverse(str); }
 bool ctString::starts_with(const char *str) const { return _starts_with(c_str(), str); }
+
 ctString ctString::trim(const char *characters) const
 {
   int64_t start = find_first_not(characters);
+  if (start == -1)
+    return "";
+
   int64_t end   = find_last_not(characters);
   return substr(start, end + 1);
 }

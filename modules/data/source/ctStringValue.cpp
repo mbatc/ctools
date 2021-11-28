@@ -36,6 +36,30 @@ ctStringValue &ctStringValue::Set(const int64_t &val) { return SetValue(ctPrint:
 ctStringValue &ctStringValue::Set(const ctString &val) { return SetValue(val, ctType_Unknown); }
 ctStringValue &ctStringValue::Set(const bool &val) { return SetValue(ctPrint::Bool(val), ctType_Uint8); }
 
+ctStringValue &ctStringValue::Parse(const ctString &value)
+{
+  if (value.find_first_not("-0123456789") == -1)
+  {
+    Set(ctScan::Int(value));
+  }
+  else if (value.find_first_not("-.0123456789") == -1)
+  {
+    Set(ctScan::Float(value));
+  }
+  else
+  {
+    int boolValue = value.compare("true", atSCO_None) ? 1 : (value.compare("false", atSCO_None) ? 0 : -1);
+    switch (boolValue)
+    {
+    case 0: Set(false);
+    case 1: Set(true);
+    case -1: Set(value);
+    }
+  }
+
+  return *this;
+}
+
 bool ctStringValue::IsEmpty() const { return m_value.length() == 0; }
 
 void ctStringValue::Parse(const ctString &str)
