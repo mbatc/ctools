@@ -281,22 +281,24 @@ bool ctScan::Bool(const char *str, int64_t *pLen, int64_t srclen)
   const int64_t nextChar = ctString::_find_first_not(str, ctString::Whitespace());
   int64_t end = ctString::_find_first_of(str, ctString::Whitespace(), nextChar);
   
-  if (nextChar < 0 || nextChar >= srclen)
+  if (nextChar < 0 || nextChar >= len)
     return false;
 
-  if (end < 0) end = srclen;
+  if (end < 0) end = len;
 
   bool res = false;
   switch (str[nextChar])
   {
   case 't': case 'T':
-    res = ctString::compare(str, "true", atSCO_None, nextChar - end) && ctString::_find_first_of(str + end, ctString::Whitespace(), 0, 1) == 0;
+    res = ctString::compare(str, "true", atSCO_None, nextChar - end);
+    if (res && len > 4 && ctString::_find_first_of(str + end, ctString::Whitespace(), 0, 1) != 0)
+      res = false;
     break;
   case 'f': case 'F':
     res = false;
     break;
   default:
-    if (ctString::_find_first_of(str + nextChar, ctString::Numerals(), 0, 1) == 0)
+    if (ctString::_find_first_of(str + nextChar, ctString::Integer(), 0, 1) == 0)
       res = ctScan::Int(str + nextChar, pLen, len - nextChar) > 0;
   }
 

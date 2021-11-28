@@ -82,8 +82,8 @@ public:
   void append(const char* str);
   void append(const char _char);
 
-  ctString substr(const int64_t start, const int64_t end) const;
-  ctString substr(const int64_t count) const;
+  ctString substr(int64_t start, int64_t end) const;
+  ctString substr(int64_t count) const;
 
   //***************
   // Static Find functions
@@ -186,7 +186,8 @@ public:
   const_iterator begin() const;
   const_iterator end() const;
 
-  static const char* Numerals();
+  static const char* Integer();
+  static const char* Decimal();
   static const char* Whitespace();
   static const char* Hex();
   static const char* Binary();

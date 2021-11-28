@@ -37,6 +37,31 @@ ctStringValue &ctStringValue::Set(const ctString &val) { return SetValue(val, ct
 ctStringValue &ctStringValue::Set(const bool &val) { return SetValue(ctPrint::Bool(val), ctType_Uint8); }
 
 bool ctStringValue::IsEmpty() const { return m_value.length() == 0; }
+
+void ctStringValue::Parse(const ctString &str)
+{
+  ctType dataType = ctType_Unknown;
+  if (str.find_first_not("-0123456789") != -1)
+  {
+    if (str.find_first_not("-.0123456789") != -1)
+    {
+      if (str == "true" || str == "false")
+        dataType = ctType_Uint8;
+    }
+    else
+    {
+      dataType = ctType_Float64;
+    }
+  }
+  else
+  {
+    dataType = ctType_Int64;
+  }
+
+  return SetValue(str, dataType);
+}
+
+bool ctStringValue::IsEmpty() const { return m_value.length() == 0; }
 bool ctStringValue::AsBool() const { return ctScan::Bool(m_value); }
 double ctStringValue::AsFloat() const { return ctScan::Float(m_value); }
 int64_t ctStringValue::AsInt() const { return ctScan::Int(m_value); }
