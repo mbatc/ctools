@@ -27,7 +27,8 @@ public:
     static int64_t Write(const ctFileHandle &handle, const void *pSrc, const int64_t &size);
 
     static bool Exists(const char *path);
-
+    static bool Copy(const char *src, const char *dst, bool overwrite = false);
+    static bool Move(const char *src, const char *dst);
     static bool EndOfFile(const ctFileHandle &handle);
   };
 };

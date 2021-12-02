@@ -90,11 +90,12 @@ public:
   template<typename T> int64_t Write(const T &data);
 
   static ctFilename Find(const ctFilename &fn, bool *pResult = nullptr);
+
   static bool Exists(const ctFilename &fn);
   static bool Create(const ctFilename &fn);
   static bool Delete(const ctFilename &fn);
-  static bool Copy(const ctFilename &fn);
-  static bool Move(const ctFilename &fn);
+  static bool Copy(const ctFilename &src, const ctFilename &dst, bool overwrite = false);
+  static bool Move(const ctFilename &src, const ctFilename &dst);
 
 protected:
   ctFileHandle m_handle = 0;

@@ -197,8 +197,17 @@ bool ctFile::Exists(const ctFilename &fn)
 
 int64_t ctFile::WriteText(const ctString &text) { return Write(text.c_str(), text.length()); }
 bool ctFile::Create(const ctFilename &fn) { return ctFile(fn, atFM_Append).IsOpen(); }
-bool ctFile::Copy(const ctFilename &fn) { ctUnused(fn); return false; }
-bool ctFile::Move(const ctFilename &fn) { ctUnused(fn); return false; }
+
+bool ctFile::Copy(const ctFilename &src, const ctFilename &dst, bool overwrite)
+{
+  return ctOS::File::Copy(src.c_str(), dst.c_str(), overwrite);
+}
+
+bool ctFile::Move(const ctFilename &src, const ctFilename &dst)
+{
+  return ctOS::File::Move(src.c_str(), dst.c_str());
+}
+
 const ctFileInfo& ctFile::Info() const { return m_info; }
 int64_t ctFile::GetMode() const { return m_mode; }
 bool ctFile::IsOpen() const { return m_handle && m_mode != atFM_None; }

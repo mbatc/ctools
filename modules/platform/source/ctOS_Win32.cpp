@@ -73,6 +73,16 @@ bool ctOS::File::Exists(const char *path)
     errorCode == ERROR_BAD_PATHNAME || errorCode == ERROR_BAD_NETPATH));
 }
 
+bool ctOS::File::Copy(const char *src, const char *dst, bool overwrite)
+{
+  return CopyFile(src, dst, !overwrite) != 0;
+}
+
+bool ctOS::File::Move(const char *src, const char *dst)
+{
+  return MoveFile(src, dst) != 0;
+}
+
 bool ctOS::File::EndOfFile(const ctFileHandle &handle)
 {
   return feof((FILE*)handle) != 0;
