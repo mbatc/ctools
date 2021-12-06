@@ -43,7 +43,10 @@ void ctFilename::assign(const ctString &path)
   if (lastDot > 0 && lastDot > lastSlash)
     m_extension = m_fullpath.substr(lastDot + 1, m_fullpath.length());
   m_name = m_fullpath.substr(lastSlash + 1, m_fullpath.length() - (m_extension.length() > 0 ? 1 : 0) - m_extension.length());
-  m_directory = m_fullpath.substr(0, lastSlash);
+  m_directory = m_fullpath.substr(0, ctMax(0ll, lastSlash));
+
+  const int64_t driveEnd = m_fullpath.find_first(':');
+  m_drive = m_fullpath.substr(0, ctMax(0ll, driveEnd));
 }
 
 ctFilename ctFilename::ResolveFullPath(const ctFilename &path)
@@ -104,6 +107,15 @@ template<> ctFilename ctFromString<ctFilename>(const ctString &str)
 ctFilename ctFilename::operator=(const ctFilename &fn) { assign(fn.m_fullpath);  return *this; }
 ctFilename ctFilename::operator=(const ctString &fn) { assign(fn); return *this; }
 ctFilename ctFilename::operator=(const char *fn) { assign(fn);  return *this; }
+
+ctFilename ctFilename::operator/(const ctFilename &fn)
+{
+  if (fn.Drive().length() > 0)
+    return fn;
+  else
+    return Path() + "/" + fn.Path();
+}
+
 bool ctFilename::operator==(const ctFilename &fn) const { return m_fullpath == fn.m_fullpath; }
 bool ctFilename::operator!=(const ctFilename &fn) const { return !(*this == fn); }
 bool ctFilename::operator==(const ctString &fn) const { return m_fullpath == fn.replace('\\', '/'); }
@@ -117,8 +129,11 @@ ctFilename::ctFilename(const ctString &path) { assign(path); }
 ctFilename::ctFilename(const ctFilename &copy) { assign(copy.m_fullpath); }
 ctString ctFilename::Path(const bool withExtension) const { return withExtension ? m_fullpath : m_directory + "/" + m_name; }
 ctString ctFilename::Name(const bool withExtension) const { return withExtension && m_extension.length() > 0 ? m_name + "." + m_extension : m_name; }
+
 const ctString& ctFilename::Extension() const { return m_extension; }
 const ctString& ctFilename::Directory() const { return m_directory; }
+const ctString & ctFilename::Drive() const { return m_drive; }
+
 ctFilename ctFilename::ResolveFullPath() const { return ResolveFullPath(*this); }
 ctFilename ctFilename::ResolveRelativePath(const ctFilename &to) const { return ResolveRelativePath(to, *this); }
 

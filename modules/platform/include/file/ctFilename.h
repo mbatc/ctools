@@ -42,6 +42,7 @@ public:
   ctString Name(const bool withExtension = true) const;
   const ctString& Extension() const;
   const ctString& Directory() const;
+  const ctString& Drive() const;
 
   ctFilename ResolveFullPath() const;
   static ctFilename ResolveFullPath(const ctFilename &path);
@@ -71,11 +72,15 @@ public:
   friend bool ctSerialize(ctObjectDescriptor *pSerialized, const ctFilename &src);
   friend bool ctDeserialize(const ctObjectDescriptor &serialized, ctFilename *pDst);
 
+  // Concatenate a filepath
+  ctFilename operator/(const ctFilename &fn);
+  
 protected:
   ctString m_fullpath;
   ctString m_name;
   ctString m_extension;
   ctString m_directory;
+  ctString m_drive;
 };
 
 template<> ctFilename ctFromString<ctFilename>(const ctString &str);
