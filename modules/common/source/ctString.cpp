@@ -408,6 +408,7 @@ ctString::ctString(char c) { m_data.assign(c, 1); validate(); }
 ctString::ctString(char *str) { set_string(str, strlen(str)); }
 ctString::ctString(const char *str) : ctString((char*)str) {}
 ctString::ctString(const ctString &copy) { set_string(copy.m_data); }
+ctString::ctString(const std::string &path) { set_string(path.c_str(), path.length()); }
 ctString::ctString(ctString &&move) { m_data.swap(move.m_data); }
 ctString::ctString(const ctVector<char> &str) { set_string(str.data(), str.size()); }
 void ctString::append(const char _char) { m_data.insert(length(), &_char, &_char + 1); }

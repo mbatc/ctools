@@ -35,6 +35,7 @@ public:
   ctFilename();
   ctFilename(const char *path);
   ctFilename(const ctString &path);
+  ctFilename(const std::string &path);
   ctFilename(const ctFilename &copy);
   ctFilename(ctFilename &&move);
   

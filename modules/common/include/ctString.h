@@ -47,6 +47,7 @@ public:
   ctString(char *str);
   ctString(const char *str);
   ctString(const ctString &copy);
+  ctString(const std::string &path);
   ctString(ctString &&move);
   ctString(const ctVector<char> &str);
   ctString(ctVector<char> &&move);
