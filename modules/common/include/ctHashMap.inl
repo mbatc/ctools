@@ -286,6 +286,9 @@ template<typename Key, class Value> ctHashMap<Key, Value>::Iterator::Iterator(ct
   m_pMap = pMap;
   m_pKVP = pBucketIterator;
   m_bucket = bucketIndex;
+
+  if (m_pKVP == nullptr)
+    ++(*this);
 }
 
 template<typename Key, class Value> ctHashMap<Key, Value>::Iterator::Iterator(Iterator &&move)
@@ -309,6 +312,9 @@ template<typename Key, class Value> ctHashMap<Key, Value>::ConstIterator::ConstI
   m_pMap = pMap;
   m_pKVP = pBucketIterator;
   m_bucket = bucketIndex;
+
+  if (m_pKVP == nullptr)
+    ++(*this);
 }
 
 template<typename Key, class Value> ctHashMap<Key, Value>::ConstIterator::ConstIterator(ConstIterator &&move)

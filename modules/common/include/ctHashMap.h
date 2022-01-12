@@ -41,8 +41,11 @@ public:
 
   class Iterator
   {
-  public:
+    friend ctHashMap;
+
+  private:
     Iterator(ctHashMap<Key, Value> *pMap, const int64_t bucketIndex, ctKeyValue<Key, Value> *pBucketIterator);
+  public:
     Iterator(const Iterator &copy);
     Iterator(Iterator &&move);
 
@@ -61,8 +64,11 @@ public:
 
   class ConstIterator
   {
-  public:
+    friend ctHashMap;
+
+  private:
     ConstIterator(const ctHashMap<Key, Value> *pMap, const int64_t bucketIndex, const ctKeyValue<Key, Value> *pBucketIterator);
+  public:
     ConstIterator(const ConstIterator &copy);
     ConstIterator(ConstIterator &&move);
 
