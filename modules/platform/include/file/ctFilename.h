@@ -74,7 +74,7 @@ public:
   friend bool ctDeserialize(const ctObjectDescriptor &serialized, ctFilename *pDst);
 
   // Concatenate a filepath
-  ctFilename operator/(const ctFilename &fn);
+  ctFilename operator/(const ctFilename &fn) const;
   
 protected:
   ctString m_fullpath;

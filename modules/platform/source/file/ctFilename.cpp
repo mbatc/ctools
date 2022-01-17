@@ -108,7 +108,7 @@ ctFilename ctFilename::operator=(const ctFilename &fn) { assign(fn.m_fullpath); 
 ctFilename ctFilename::operator=(const ctString &fn) { assign(fn); return *this; }
 ctFilename ctFilename::operator=(const char *fn) { assign(fn);  return *this; }
 
-ctFilename ctFilename::operator/(const ctFilename &fn)
+ctFilename ctFilename::operator/(const ctFilename &fn) const
 {
   if (fn.Drive().length() > 0)
     return fn;
